@@ -12,7 +12,17 @@ class Products extends StatelessWidget {
       child: Column( 
         children: <Widget>[
           Image.asset('/Users/santes/Documents/flutter_projects/list-view/assets/food.jpg'),
-          Text(products[index])
+          Text(products[index]),
+          ButtonBar(
+            alignment: MainAxisAlignment.center,
+            children: <Widget>[
+              FlatButton(
+                child: Text('Details'),
+                onPressed: () => {},
+              )
+            ],
+          )
+
         ],
       ),
     );
