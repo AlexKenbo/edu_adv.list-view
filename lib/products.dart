@@ -19,18 +19,18 @@ class Products extends StatelessWidget {
   }
 
   Widget _buildProductList() {
-    Widget productCard;
+    Widget productCards;
       if (products.length > 0) {
-        productCard = ListView.builder( 
+        productCards = ListView.builder( 
         //Подгружает постепенно элементы списка
         //Хорош на big-списках
         itemBuilder: _buildProductItem,
         itemCount: products.length,
         );
       } else {
-        productCard = Center(child: Text('Products is empty'),);
+        productCards = Container();
       }
-    return productCard; 
+    return productCards; 
   }
 
   @override
