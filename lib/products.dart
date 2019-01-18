@@ -18,34 +18,25 @@ class Products extends StatelessWidget {
     );
   }
 
-  @override
-    Widget build(BuildContext context) {
-      print('[Products Widget] build()');
-      // TODO: implement build
-      /* 
-      //ListView хорош на недлинных списках, 
-      //он прогружает на экран весь список
-      return ListView( 
-          children: 
-            products
-              .map(
-                (element) => Card(
-                    child: Column( 
-                      children: <Widget>[
-                        Image.asset('/Users/santes/Documents/flutter_projects/list-view/assets/food.jpg'),
-                        Text(element)
-                      ],
-                    ),
-                  ),
-              ).toList()
-        );
-      */
-      return products.length > 0 ? ListView.builder( 
+  Widget _buildProductList() {
+    Widget productCard;
+      if (products.length > 0) {
+        productCard = ListView.builder( 
         //Подгружает постепенно элементы списка
         //Хорош на big-списках
         itemBuilder: _buildProductItem,
         itemCount: products.length,
-      ) : Center(child: Text('Products is empty'),);
-    }
+        );
+      } else {
+        productCard = Center(child: Text('Products is empty'),);
+      }
+    return productCard; 
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print('[Products Widget] build()');
+    return _buildProductList();
+  }
 
 }
