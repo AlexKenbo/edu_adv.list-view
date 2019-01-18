@@ -12,7 +12,7 @@ class ProductControl extends StatelessWidget {
             color: Theme.of(context).primaryColor,
             child: Text('Add Product'),
             onPressed: () {
-              addProduct('Sweets');
+              addProduct({'title':'Chocolate', 'image': '/Users/santes/Documents/flutter_projects/list-view/assets/food.jpg'});
             },
           );
     }
