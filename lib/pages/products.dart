@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/product_manager.dart';
+import 'package:flutter_course/pages/products_admin.dart';
 
 class ProductsPage extends StatelessWidget {
   @override
@@ -15,7 +16,15 @@ class ProductsPage extends StatelessWidget {
               ),
               ListTile(
                 title: Text('Manage products'),
-                onTap: (){},
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(
+                    builder:(BuildContext context){ 
+                      return ProductsAdminPage();
+                      }
+                    )
+                  );
+                  
+                },
               )
 
             ],
