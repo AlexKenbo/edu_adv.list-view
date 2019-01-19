@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 //import 'package:flutter/rendering.dart';
-import 'package:flutter_course/pages/auth.dart';
+import './pages/auth.dart';
+import './pages/products_admin.dart';
+import './pages/products.dart';
 
 void main() {
   //debugPaintSizeEnabled = true;
@@ -14,12 +16,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      routes: {
+        '/': (BuildContext context) => AuthPage(), // Слеш зарезирвирован под home:
+        '/products': (BuildContext context) => ProductsPage(),
+        '/admin': (BuildContext context) => ProductsAdminPage(),
+      },
       //debugShowMaterialGrid: true,
       theme: ThemeData(
         brightness: Brightness.light,
         primarySwatch: Colors.deepOrange,
         accentColor: Colors.deepPurple
       ),
-      home: AuthPage(),
+      //home: AuthPage(),
     );}
 }
