@@ -2,50 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_course/products.dart';
 import 'package:flutter_course/product_control.dart';
 
-class ProductManager extends StatefulWidget {
-  final Map<String, String> startingProduct;
+class ProductManager extends StatelessWidget {
+  final List<Map<String, String>> products;
+  final Function addProduct;
+  final Function deleteProduct;
 
-  //ProductManager({this.startingProduct = 'Option args'}) {
-  ProductManager({this.startingProduct}) {
-    print('[ProductManager Widget] Constructor');
-  }
-
-  @override
-  _ProductManagerState createState() {
-    print('[ProductManager Widget] createState()');
-    return _ProductManagerState();
-  }
-}
-
-class _ProductManagerState extends State<ProductManager> {
-  final List<Map<String, String>> _products = [];
-
-  @override
-  void initState() {
-    print('[ProductManager State] initState()');
-    if (widget.startingProduct != null) {
-      _products.add(widget.startingProduct);
-    }
-    super.initState();
-  }
-
-  @override
-  void didUpdateWidget(ProductManager oldWidget) {
-    print('[ProductManager State] didUpdateWidget()');
-    super.didUpdateWidget(oldWidget);
-  }
-
-  void _addProduct(Map<String, String> product) {
-    setState(() {
-      _products.add(product);
-    });
-  }
-
-  void _deleteProduct(int index) {
-    setState(() {
-      _products.removeAt(index);
-    });
-  }
+  ProductManager(this.products, this.addProduct, this.deleteProduct);
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +15,10 @@ class _ProductManagerState extends State<ProductManager> {
     return Column(children: <Widget>[
       Container(
         margin: EdgeInsets.all(10.0),
-        child: ProductControl(_addProduct),
+        child: ProductControl(addProduct),
       ),
       Expanded(
-        child: Products(_products, deleteProduct: _deleteProduct)
+        child: Products(products, deleteProduct: deleteProduct)
       ),
     ]);
   }
