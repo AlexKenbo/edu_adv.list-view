@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 
 
 class ProductCreatePage extends StatefulWidget {
+  final Function addProduct;
+
+  ProductCreatePage(this.addProduct);
+
   @override
     State<StatefulWidget> createState() {
       return _ProductCreatePagState();
@@ -9,22 +13,21 @@ class ProductCreatePage extends StatefulWidget {
 }
 
 class _ProductCreatePagState extends State<ProductCreatePage> {
-  String title = '';
-  String description =  '';
-  double price;
-
+  String titleValue = '';
+  String descriptionValue =  '';
+  double priceValue;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(24.0),
-      child: Column(
+      child: ListView(
         children: <Widget>[
           TextField(
             decoration: InputDecoration(labelText: 'Product Title'),
             onChanged: (String value){
             setState(() {
-            title = value;           
+            titleValue = value;           
             });
           },),
           TextField(
@@ -32,7 +35,7 @@ class _ProductCreatePagState extends State<ProductCreatePage> {
             maxLines: 12,
             onChanged: (String value){
             setState(() {
-            description = value;           
+            descriptionValue = value;           
             });
           },),
           TextField(
@@ -40,9 +43,21 @@ class _ProductCreatePagState extends State<ProductCreatePage> {
             keyboardType: TextInputType.number,
             onChanged: (String value){
             setState(() {
-            price = double.parse(value);           
+            priceValue = double.parse(value);           
             });
           },),
+          RaisedButton(
+            child: Text('Save'),
+            onPressed: (){
+              final Map<String, dynamic> product = {
+                'title': titleValue,
+                'description': descriptionValue,
+                'price': priceValue,
+                'image': '/Users/santes/Documents/flutter_projects/flutter_course/assets/food.jpg',
+              };
+              widget.addProduct(product);
+            },
+          ),
           
         ],
     ));
