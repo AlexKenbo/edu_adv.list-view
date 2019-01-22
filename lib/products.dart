@@ -18,17 +18,22 @@ class Products extends StatelessWidget {
             //margin: EdgeInsets.symmetric(vertical: 15.0),
             padding: EdgeInsets.only(top: 20.0),
             //color: Colors.red,
-            child: Text(
-              products[index]['title'],
-              style: TextStyle(
-                fontSize: 26.0, 
-                fontWeight: FontWeight.w700,
-                fontFamily: 'Oswald',
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                products[index]['title'],
+                style: TextStyle(
+                  fontSize: 26.0, 
+                  fontWeight: FontWeight.w700,
+                  fontFamily: 'Oswald',
+                  ),
                 ),
-              ),
+                SizedBox(width: 8.0,),
+                Text(products[index]['price'].toString()),
+              ],)
           ),
           Text(products[index]['description']),
-          Text(products[index]['price'].toString()),
           ButtonBar(
             alignment: MainAxisAlignment.center,
             children: <Widget>[
