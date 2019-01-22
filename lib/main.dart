@@ -39,7 +39,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       routes: {
         //'/': (BuildContext context) => AuthPage(), // Слеш зарезирвирован под home:
-        '/': (BuildContext context) => ProductsPage(_products),
+        '/products': (BuildContext context) => ProductsPage(_products),
         '/admin': (BuildContext context) => ProductsAdminPage(_addProduct, _deleteProduct),
       },
       onGenerateRoute: (RouteSettings settings){
@@ -70,6 +70,6 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.deepOrange,
         accentColor: Colors.deepPurple
       ),
-      //home: AuthPage(),
+      home: AuthPage(),
     );}
 }

@@ -32,7 +32,7 @@ class _ProductCreatePagState extends State<ProductCreatePage> {
           },),
           TextField(
             decoration: InputDecoration(labelText: 'Product Descreption'),
-            maxLines: 12,
+            maxLines: 5,
             onChanged: (String value){
             setState(() {
             descriptionValue = value;           
@@ -59,7 +59,7 @@ class _ProductCreatePagState extends State<ProductCreatePage> {
                 'image': '/Users/santes/Documents/flutter_projects/flutter_course/assets/food.jpg',
               };
               widget.addProduct(product);
-              Navigator.pushReplacementNamed(context, '/');
+              Navigator.pushReplacementNamed(context, '/products');
             },
           ),
           
