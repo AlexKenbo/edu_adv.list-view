@@ -12,7 +12,14 @@ class Products extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Image.asset(products[index]['image']),
-          Text(products[index]['title']),
+          //SizedBox(height: 10.0),
+          Container(
+            //margin: EdgeInsets.only(top: 20.0),
+            //margin: EdgeInsets.symmetric(vertical: 15.0),
+            padding: EdgeInsets.only(top: 20.0),
+            //color: Colors.red,
+            child: Text(products[index]['title']),
+          ),
           Text(products[index]['description']),
           Text(products[index]['price'].toString()),
           ButtonBar(
