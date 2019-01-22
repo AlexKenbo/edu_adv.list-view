@@ -18,7 +18,14 @@ class Products extends StatelessWidget {
             //margin: EdgeInsets.symmetric(vertical: 15.0),
             padding: EdgeInsets.only(top: 20.0),
             //color: Colors.red,
-            child: Text(products[index]['title']),
+            child: Text(
+              products[index]['title'],
+              style: TextStyle(
+                fontSize: 26.0, 
+                fontWeight: FontWeight.w700,
+                fontFamily: 'Oswald',
+                ),
+              ),
           ),
           Text(products[index]['description']),
           Text(products[index]['price'].toString()),
