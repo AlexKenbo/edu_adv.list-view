@@ -46,7 +46,10 @@ class _ProductCreatePagState extends State<ProductCreatePage> {
             priceValue = double.parse(value);           
             });
           },),
+          SizedBox(height: 10.0,),
           RaisedButton(
+            color: Theme.of(context).accentColor,
+            textColor: Colors.white,
             child: Text('Save'),
             onPressed: (){
               final Map<String, dynamic> product = {
@@ -56,6 +59,7 @@ class _ProductCreatePagState extends State<ProductCreatePage> {
                 'image': '/Users/santes/Documents/flutter_projects/flutter_course/assets/food.jpg',
               };
               widget.addProduct(product);
+              Navigator.pushReplacementNamed(context, '/');
             },
           ),
           
