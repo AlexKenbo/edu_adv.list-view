@@ -43,7 +43,19 @@ class Products extends StatelessWidget {
                 ),
               ],)
           ),
-          Text(products[index]['description']),
+          DecoratedBox(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(3.0),
+              border: Border.all(
+                color: Colors.grey,
+                width: 1.0,
+              ),
+            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text('Krasnodarskii krai, Anapa'),
+            )
+          ),
           ButtonBar(
             alignment: MainAxisAlignment.center,
             children: <Widget>[
