@@ -3,29 +3,11 @@ import 'dart:async';
 
 class ProductPage extends StatelessWidget {
   final String title;
-  final String imageUrl;
+  final String image;
+  final double price;
+  final String description;
 
-  ProductPage(this.title, this.imageUrl);
-
-  _showWarningDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context){
-        return AlertDialog(
-          title: Text('Are you sure?'),
-          content: Text('This action cannot be undone'),
-          actions: <Widget>[
-            FlatButton(child: Text('DISCARD'), onPressed: (){
-              Navigator.pop(context);
-            },),
-            FlatButton(child: Text('CONTINUE'), onPressed: (){
-              Navigator.pop(context);
-              Navigator.pop(context, true);
-            },),
-          ],
-        );  
-    });
-  }
+  ProductPage(this.title, this.image, this.price, this.description);
 
   @override
   Widget build(BuildContext context) {
@@ -39,24 +21,43 @@ class ProductPage extends StatelessWidget {
         appBar: AppBar(
           title: Text(title),
         ),
-        body: Center(
-            child: Column(
-          //mainAxisAlignment: MainAxisAlignment.center, // выравнивание по вертикали. не используем тк с картинкой по центру не красиво
-          crossAxisAlignment: CrossAxisAlignment.center, // выравнивание по горизонтали не сработало, так как ширина столбца = ширине элемента
-          children: <Widget>[
-            Image.asset(imageUrl),
-            Container(
+        body: Container(
+          padding: EdgeInsets.all(10.0),
+          child: Column( 
+            //mainAxisAlignment: MainAxisAlignment.center, // выравнивание по вертикали. не используем тк с картинкой по центру не красиво
+            crossAxisAlignment: CrossAxisAlignment.center, // выравнивание по горизонтали не сработало, так как ширина столбца = ширине элемента
+            children: <Widget>[
+              Image.asset(image),
+              Text(
+                title, 
+                style: TextStyle(
+                  fontSize: 26.0,
+                  fontFamily: 'Oswald',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                Text('Krasnodarskii krai, Anapa', style: TextStyle(
+                  fontFamily: 'Oswald',
+                  color: Colors.grey
+                )),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text('|', style: TextStyle(color: Colors.grey),)),
+                Text('\$' + price.toString(), style: TextStyle(
+                  fontFamily: 'Oswald', color: Colors.grey
+                ),),
+              ],),
+              Container(
                 padding: EdgeInsets.all(10.0),
-                child: Text(title)),
-            Container(
-                padding: EdgeInsets.all(10.0),
-                child: RaisedButton(
-                  color: Theme.of(context).accentColor,
-                  child: Text('Delete'),
-                  onPressed: () {
-                    _showWarningDialog(context);
-                  }
-                ))
+                
+                child: Text(
+                  description,
+                  textAlign: TextAlign.left ,
+              )),
+              
           ],
         ))));
   }
