@@ -21,22 +21,17 @@ class Products extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Flexible( //заполняет расстояние среднее между Expanded и обычным
-                  //fit: FlexFit.tight, //работает как Expanded - заполняет всё свободное пространство
-                  flex: 10, // заполняет в 10 раз больше себя
-                  child: Text(
+                Text(
                     products[index]['title'],
                     style: TextStyle(
                       fontSize: 26.0, 
                       fontWeight: FontWeight.w700,
                       fontFamily: 'Oswald',
                       ),
-                  )
+
                 ),
                 SizedBox(width: 8.0,),
-                Expanded(
-                  flex: 2,
-                  child: Container(
+                Container(
                     padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 3.0),
                     decoration: BoxDecoration(
                       color: Theme.of(context).accentColor,
@@ -46,7 +41,6 @@ class Products extends StatelessWidget {
                       '\$${products[index]['price'].toString()}', 
                       style: TextStyle(color: Colors.white),
                       ),
-                  )
                 ),
               ],)
           ),
