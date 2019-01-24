@@ -21,29 +21,37 @@ class Products extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-                products[index]['title'],
-                style: TextStyle(
-                  fontSize: 26.0, 
-                  fontWeight: FontWeight.w700,
-                  fontFamily: 'Oswald',
-                  ),
+                Flexible( //заполняет расстояние среднее между Expanded и обычным
+                  //fit: FlexFit.tight, //работает как Expanded - заполняет всё свободное пространство
+                  flex: 10, // заполняет в 10 раз больше себя
+                  child: Text(
+                    products[index]['title'],
+                    style: TextStyle(
+                      fontSize: 26.0, 
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Oswald',
+                      ),
+                  )
                 ),
                 SizedBox(width: 8.0,),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 3.0),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).accentColor,
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  child: Text(
-                    '\$${products[index]['price'].toString()}', 
-                    style: TextStyle(color: Colors.white),
+                Expanded(
+                  flex: 2,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 3.0),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).accentColor,
+                      borderRadius: BorderRadius.circular(5.0),
                     ),
+                    child: Text(
+                      '\$${products[index]['price'].toString()}', 
+                      style: TextStyle(color: Colors.white),
+                      ),
+                  )
                 ),
               ],)
           ),
-          DecoratedBox(
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(3.0),
               border: Border.all(
@@ -51,10 +59,8 @@ class Products extends StatelessWidget {
                 width: 1.0,
               ),
             ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text('Krasnodarskii krai, Anapa'),
-            )
+            child:  Text('Krasnodarskii krai, Anapa'),
+            
           ),
           ButtonBar(
             alignment: MainAxisAlignment.center,
