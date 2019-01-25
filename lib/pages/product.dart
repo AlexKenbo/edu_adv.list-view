@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+import '../widgets/ui_elements/title_default.dart';
+
 class ProductPage extends StatelessWidget {
   final String title;
   final String image;
@@ -28,14 +30,7 @@ class ProductPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center, // выравнивание по горизонтали не сработало, так как ширина столбца = ширине элемента
             children: <Widget>[
               Image.asset(image),
-              Text(
-                title, 
-                style: TextStyle(
-                  fontSize: 26.0,
-                  fontFamily: 'Oswald',
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
+              TitleDefault(title),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
