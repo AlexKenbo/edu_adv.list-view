@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './price_tag.dart';
+import './product_card.dart';
 
 class Products extends StatelessWidget {
   final List<Map<String, dynamic>> products;
@@ -8,66 +8,7 @@ class Products extends StatelessWidget {
     print('[Products Widget] Constructor');
   }
 
-  Widget _buildProductItem(BuildContext context, int index) {
-    return Card(
-      child: Column(
-        children: <Widget>[
-          Image.asset(products[index]['image']),
-          //SizedBox(height: 10.0),
-          Container(
-            //margin: EdgeInsets.only(top: 20.0),
-            //margin: EdgeInsets.symmetric(vertical: 15.0),
-            padding: EdgeInsets.only(top: 20.0),
-            //color: Colors.red,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                    products[index]['title'],
-                    style: TextStyle(
-                      fontSize: 26.0, 
-                      fontWeight: FontWeight.w700,
-                      fontFamily: 'Oswald',
-                      ),
 
-                ),
-                SizedBox(width: 8.0,),
-                PriceTag(products[index]['price'].toString()),
-              ],)
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(3.0),
-              border: Border.all(
-                color: Colors.grey,
-                width: 1.0,
-              ),
-            ),
-            child:  Text('Krasnodarskii krai, Anapa'),
-            
-          ),
-          ButtonBar(
-            alignment: MainAxisAlignment.center,
-            children: <Widget>[
-              IconButton(
-                icon: Icon(Icons.info),
-                color: Theme.of(context).accentColor,
-                onPressed: () => Navigator.
-                  pushNamed<bool>(context, '/product/${index.toString()}'),
-              ),
-              IconButton(
-                icon: Icon(Icons.favorite_border),
-                color: Colors.red,
-                onPressed: () => Navigator.
-                  pushNamed<bool>(context, '/product/${index.toString()}'),
-              )
-            ],
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildProductList() {
     Widget productCards;
@@ -75,7 +16,7 @@ class Products extends StatelessWidget {
       productCards = ListView.builder(
         //Подгружает постепенно элементы списка
         //Хорош на big-списках
-        itemBuilder: _buildProductItem,
+        itemBuilder: (BuildContext context, int index) => ProductCard(products[index], index),
         itemCount: products.length,
       );
     } else {
