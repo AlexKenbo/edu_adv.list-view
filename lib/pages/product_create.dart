@@ -59,7 +59,7 @@ class _ProductCreatePagState extends State<ProductCreatePage> {
     return TextFormField(
       validator: (String value) {
         //if (value.trim().length <= 0){
-        if (value.isEmpty || !RegExp(r'^(?:[1-9]\d*|0)?(?:\.\d+)?$').hasMatch(value)){  
+        if (value.isEmpty || !RegExp(r'^(?:[1-9]\d*|0)?(?:\[.,]\d+)?$').hasMatch(value)){  
           return 'Price is required and should be number';
         }
       },
@@ -94,7 +94,11 @@ class _ProductCreatePagState extends State<ProductCreatePage> {
     final double targetWidth = deviceWidth > 550.0 ? 500.0 : deviceWidth * 0.95;
     final double targetPadding = deviceWidth - targetWidth;
 
-    return Container(
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: Container(
       margin: EdgeInsets.all(10.0),
       child: Form(
         key: _formKey,
@@ -120,6 +124,6 @@ class _ProductCreatePagState extends State<ProductCreatePage> {
               ),
             )*/
           ],
-    )));
+    ))));
   }
 }
