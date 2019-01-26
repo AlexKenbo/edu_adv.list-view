@@ -8,9 +8,13 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState extends State<AuthPage> {
-  String _emailValue;
-  String _passwordValue;
-  bool _acceptTermsValue = false;
+  final Map<String, dynamic> _formData = {
+    'email': null,
+    'password': null,
+    'acceptTerms': false,
+  };
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   DecorationImage _buildBackgroundImage() {
     return DecorationImage(
@@ -24,51 +28,61 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Widget _buildEmailField() {
-    return TextField(
+    return TextFormField(
+      validator: (String value) {
+        if (value.isEmpty || !RegExp(r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)').hasMatch(value)){  
+          return 'Email is required and should be email address';
+        }
+      },
       decoration: InputDecoration(
         labelText: 'Your Email',
         filled: true,
         fillColor: Colors.white,
       ),
       keyboardType: TextInputType.emailAddress,
-      onChanged: (String value) {
-        setState(() {
-          _emailValue = value;
-        });
+      onSaved: (String value) {
+          _formData['email'] = value;
       },
     );
   }
 
   Widget _buildPasswordField() {
-    return TextField(
+    return TextFormField(
+      validator: (String value) {
+        if (value.isEmpty || value.length < 4){  
+          return 'Password is required and should be +3 charsets long';
+        }
+      },
       decoration: InputDecoration(
         labelText: 'Your Password',
         filled: true,
         fillColor: Colors.white,
       ),
       obscureText: true,
-      onChanged: (String value) {
-        setState(() {
-          _passwordValue = value;
-        });
+      onSaved: (String value) {
+        _formData['password'] = value;
       },
     );
   }
 
   Widget _buildAcceptTerms() {
-    return SwitchListTile(
-      value: _acceptTermsValue,
+    return Form SwitchListTile(
+      value: _formData['acceptTerms'],
       title: Text('Accept terms'),
       onChanged: (bool value) {
         setState(() {
-          _acceptTermsValue = value;
+          _formData['acceptTerms'] = value;
         });
       },
     );
   }
 
   void _onSubmitForm() {
-    print('$_emailValue:$_passwordValue');
+    if (!_formKey.currentState.validate() || !_formData['acceptTerms']) {
+      return;
+    }
+    _formKey.currentState.save();    
+    print('${_formData['email']}:${_formData['password']}');
     Navigator.pushReplacementNamed(context, '/products');
   }
 
@@ -90,24 +104,26 @@ class _AuthPageState extends State<AuthPage> {
             child: SingleChildScrollView(
                 child: Container(
                     width: targetWidth,
-                    child: Column(
-                      children: <Widget>[
-                        _buildEmailField(),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        _buildPasswordField(),
-                        _buildAcceptTerms(),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        RaisedButton(
-                          textColor: Colors.white,
-                          child: Text('LOGIN'),
-                          onPressed: _onSubmitForm,
-                        ),
-                      ],
-        )))),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: <Widget>[
+                          _buildEmailField(),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          _buildPasswordField(),
+                          _buildAcceptTerms(),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          RaisedButton(
+                            textColor: Colors.white,
+                            child: Text('LOGIN'),
+                            onPressed: _onSubmitForm,
+                          ),
+                        ],
+        ))))),
       ),
     );
   }
