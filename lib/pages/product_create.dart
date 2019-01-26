@@ -73,12 +73,11 @@ class _ProductCreatePagState extends State<ProductCreatePage> {
       child: ListView(
         padding: EdgeInsets.symmetric(horizontal:targetPadding/2),
         children: <Widget>[
-          _buildTitleField(),
+          _buildTitleField(), 
           _buildDescriptionField(),
           _buildPriceField(),
           SizedBox(height: 10.0,),
           RaisedButton(
-            color: Theme.of(context).accentColor,
             textColor: Colors.white,
             child: Text('Save'),
             onPressed: () => _onFormSubmit(),
