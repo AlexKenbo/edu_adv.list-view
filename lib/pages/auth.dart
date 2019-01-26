@@ -85,7 +85,9 @@ class _AuthPageState extends State<AuthPage> {
           image: _buildBackgroundImage(),
         ),
         padding: EdgeInsets.all(24.0),
-        child: Center(
+        child: Container(
+          alignment: Alignment.center,
+          width: 200.0,
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
