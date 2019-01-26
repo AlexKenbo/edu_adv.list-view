@@ -20,6 +20,13 @@ class _ProductCreatePagState extends State<ProductCreatePage> {
 
   Widget _buildTitleField(){
     return TextFormField(
+      //autovalidate: true, 
+      validator: (String value) {
+        //if (value.trim().length <= 0){
+        if (value.isEmpty){  
+          return 'title is required';
+        }
+      },
       decoration: InputDecoration(labelText: 'Product Title'),
       onSaved: (String value){
         setState(() {
@@ -55,6 +62,9 @@ class _ProductCreatePagState extends State<ProductCreatePage> {
   }
 
   void _submitForm() {
+    if (!_formKey.currentState.validate()) {
+      return;
+    }
     _formKey.currentState.save();
     final Map<String, dynamic> product = {
       'title': _titleValue,
@@ -83,20 +93,20 @@ class _ProductCreatePagState extends State<ProductCreatePage> {
             _buildDescriptionField(),
             _buildPriceField(),
             SizedBox(height: 10.0,),
-            /*RaisedButton(
+            RaisedButton(
               textColor: Colors.white,
               child: Text('Save'),
-              onPressed: () => _onFormSubmit(),
+              onPressed: _submitForm,
             ),
-            */
-            GestureDetector(
+            
+            /*GestureDetector( // Кастомная кнопка
               onTap: _submitForm,
               child: Container(
                 color: Colors.green,
                 padding: EdgeInsets.all(5.0),
                 child: Text('Custom button'),
               ),
-            )
+            )*/
           ],
     )));
   }
