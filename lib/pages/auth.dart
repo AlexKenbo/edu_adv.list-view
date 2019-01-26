@@ -12,6 +12,68 @@ class _AuthPageState extends State<AuthPage> {
   String _passwordValue;
   bool _acceptTermsValue = false;
   
+  DecorationImage _buildBackgroundImage() {
+    return  DecorationImage(
+      fit: BoxFit.cover,
+      colorFilter: ColorFilter.mode(
+        Colors.black.withOpacity(0.4), 
+        BlendMode.dstATop,
+        ),
+      image: AssetImage('assets/background.jpg'),
+    );
+  }
+
+  Widget _buildEmailField() {
+    return TextField(
+      decoration: 
+        InputDecoration(
+          labelText: 'Your Email',
+          filled: true,
+          fillColor: Colors.white,
+      ),
+      keyboardType: TextInputType.emailAddress,
+      onChanged: (String value){
+        setState(() {
+          _emailValue = value;
+        });
+      },
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return TextField(
+      decoration: 
+        InputDecoration(
+          labelText: 'Your Password',
+          filled: true,
+          fillColor: Colors.white,
+      ),
+      obscureText: true,
+      onChanged: (String value){
+        setState(() {
+          _passwordValue = value;
+        });
+      },
+    );
+  }
+
+  Widget _buildAcceptTerms() {
+    return SwitchListTile(
+      value: _acceptTermsValue,
+      title: Text('Accept terms'),
+      onChanged: (bool value){
+        setState(() {
+          _acceptTermsValue = value;
+        });
+      },
+    );
+  }
+
+  void _onSubmitForm() {
+    print('$_emailValue:$_passwordValue');
+    Navigator.pushReplacementNamed(context, '/products');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,67 +82,23 @@ class _AuthPageState extends State<AuthPage> {
       ),
       body: Container(
         decoration: BoxDecoration(
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(
-              Colors.black.withOpacity(0.4), 
-              BlendMode.dstATop,
-              ),
-            image: AssetImage('assets/background.jpg'),
-          )
+          image: _buildBackgroundImage(),
         ),
         padding: EdgeInsets.all(24.0),
         child: Center(
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                TextField(
-                  decoration: 
-                    InputDecoration(
-                      labelText: 'Your Email',
-                      filled: true,
-                      fillColor: Colors.white,
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                  onChanged: (String value){
-                    setState(() {
-                      _emailValue = value;
-                    });
-                  },
-                ),
+                _buildEmailField(),
                 SizedBox(height: 10.0,),
-                TextField(
-                  decoration: 
-                    InputDecoration(
-                      labelText: 'Your Password',
-                      filled: true,
-                      fillColor: Colors.white,
-                  ),
-                  obscureText: true,
-                  onChanged: (String value){
-                    setState(() {
-                      _passwordValue = value;
-                    });
-                  },
-                ),  
-                SwitchListTile(
-                  value: _acceptTermsValue,
-                  title: Text('Accept terms'),
-                  onChanged: (bool value){
-                    setState(() {
-                      _acceptTermsValue = value;
-                    });
-                  },
-                ),
+                _buildPasswordField(),  
+                _buildAcceptTerms(),
                 SizedBox(height: 10.0,),
                 RaisedButton(
                   color: Theme.of(context).primaryColor,
                   textColor: Colors.white,
                   child: Text('LOGIN'),
-                  onPressed: () {
-                    print('$_emailValue:$_passwordValue');
-                    Navigator.pushReplacementNamed(context, '/products');
-                  },
+                  onPressed: _onSubmitForm,
                 ),
               ],
         ))),
