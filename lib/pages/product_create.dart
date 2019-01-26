@@ -51,7 +51,7 @@ class _ProductCreatePagState extends State<ProductCreatePage> {
     },);
   }
 
-  void _onFormSubmit() {
+  void _submitForm() {
     final Map<String, dynamic> product = {
       'title': _titleValue,
       'description': _descriptionValue,
@@ -77,12 +77,20 @@ class _ProductCreatePagState extends State<ProductCreatePage> {
           _buildDescriptionField(),
           _buildPriceField(),
           SizedBox(height: 10.0,),
-          RaisedButton(
+          /*RaisedButton(
             textColor: Colors.white,
             child: Text('Save'),
             onPressed: () => _onFormSubmit(),
           ),
-          
+          */
+          GestureDetector(
+            onTap: _submitForm,
+            child: Container(
+              color: Colors.green,
+              padding: EdgeInsets.all(5.0),
+              child: Text('Custom button'),
+            ),
+          )
         ],
     ));
   }
