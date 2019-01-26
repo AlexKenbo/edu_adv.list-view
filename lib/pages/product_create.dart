@@ -23,8 +23,8 @@ class _ProductCreatePagState extends State<ProductCreatePage> {
       //autovalidate: true, 
       validator: (String value) {
         //if (value.trim().length <= 0){
-        if (value.isEmpty){  
-          return 'title is required';
+        if (value.isEmpty || value.length < 5){  
+          return 'Title is required and should be 5+ characters long';
         }
       },
       decoration: InputDecoration(labelText: 'Product Title'),
@@ -38,6 +38,12 @@ class _ProductCreatePagState extends State<ProductCreatePage> {
 
   Widget _buildDescriptionField() {
     return TextFormField(
+      validator: (String value) {
+        //if (value.trim().length <= 0){
+        if (value.isEmpty || value.length < 10){  
+          return 'Descrition is required and should be 10+ characters long';
+        }
+      },
       maxLines: 5,
       decoration: InputDecoration(labelText: 'Product Descreption'),
       keyboardType: TextInputType.number,
@@ -51,6 +57,12 @@ class _ProductCreatePagState extends State<ProductCreatePage> {
 
   Widget _buildPriceField() {
     return TextFormField(
+      validator: (String value) {
+        //if (value.trim().length <= 0){
+        if (value.isEmpty || !RegExp(r'^(?:[1-9]\d*|0)?(?:\.\d+)?$').hasMatch(value)){  
+          return 'Price is required and should be number';
+        }
+      },
       decoration: InputDecoration(labelText: 'Product Price'),
       keyboardType: TextInputType.number,
       onSaved: (String value){
