@@ -66,7 +66,7 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Widget _buildAcceptTerms() {
-    return Form SwitchListTile(
+    return SwitchListTile(
       value: _formData['acceptTerms'],
       title: Text('Accept terms'),
       onChanged: (bool value) {
