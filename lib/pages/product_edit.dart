@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../widgets/helpers/ensure-visible.dart';
 
 class ProductEditPage extends StatefulWidget {
   final Function addProduct;
@@ -23,57 +23,69 @@ class _ProductEditPageState extends State<ProductEditPage> {
     'image': 'assets/food.jpg',
   };
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _titleFocusNode = FocusNode();
+  final _descriptionFocusNode = FocusNode();
+  final _priceFocusNode = FocusNode();
 
   Widget _buildTitleField(){
-    return TextFormField(
-      initialValue: widget.product == null ? '' : widget.product['title'],
-      //autovalidate: true, 
-      validator: (String value) {
-        //if (value.trim().length <= 0){
-        if (value.isEmpty || value.length < 5){  
-          return 'Title is required and should be 5+ characters long';
-        }
-      },
-      decoration: InputDecoration(labelText: 'Product Title'),
-      onSaved: (String value){
-        _formData['title'] = value;        
-      },
-    );
+    return EnsureVisibleWhenFocused(
+      focusNode: _titleFocusNode,
+      child: TextFormField(
+        focusNode: _titleFocusNode,
+        initialValue: widget.product == null ? '' : widget.product['title'],
+        //autovalidate: true, 
+        validator: (String value) {
+          //if (value.trim().length <= 0){
+          if (value.isEmpty || value.length < 5){  
+            return 'Title is required and should be 5+ characters long';
+          }
+        },
+        decoration: InputDecoration(labelText: 'Product Title'),
+        onSaved: (String value){
+          _formData['title'] = value;        
+        },
+    ));
   }
 
   Widget _buildDescriptionField() {
-    return TextFormField(
-      initialValue: widget.product == null ? '' : widget.product['description'],
-      validator: (String value) {
-        //if (value.trim().length <= 0){
-        if (value.isEmpty || value.length < 10){  
-          return 'Descrition is required and should be 10+ characters long';
+    return EnsureVisibleWhenFocused(
+      focusNode: _descriptionFocusNode,
+      child: TextFormField(
+        focusNode: _descriptionFocusNode,
+        initialValue: widget.product == null ? '' : widget.product['description'],
+        validator: (String value) {
+          //if (value.trim().length <= 0){
+          if (value.isEmpty || value.length < 10){  
+            return 'Descrition is required and should be 10+ characters long';
+          }
+        },
+        maxLines: 5,
+        decoration: InputDecoration(labelText: 'Product Descreption'),
+        keyboardType: TextInputType.number,
+        onSaved: (String value){
+          _formData['description'] = value;        
         }
-      },
-      maxLines: 5,
-      decoration: InputDecoration(labelText: 'Product Descreption'),
-      keyboardType: TextInputType.number,
-      onSaved: (String value){
-        _formData['description'] = value;        
-      }
-      );
+      ));
   }
 
   Widget _buildPriceField() {
-    return TextFormField(
-      initialValue: widget.product == null ? '' : widget.product['price'].toString(),
-      validator: (String value) {
-        //if (value.trim().length <= 0){
-        if (value.isEmpty || !RegExp(r'^(?:[1-9]\d*|0)?(?:\[.,]\d+)?$').hasMatch(value)){  
-          return 'Price is required and should be number';
+    return EnsureVisibleWhenFocused(
+      focusNode: _priceFocusNode,
+      child: TextFormField(
+        focusNode: _priceFocusNode,
+        initialValue: widget.product == null ? '' : widget.product['price'].toString(),
+        validator: (String value) {
+          //if (value.trim().length <= 0){
+          if (value.isEmpty || !RegExp(r'^(?:[1-9]\d*|0)?(?:\[.,]\d+)?$').hasMatch(value)){  
+            return 'Price is required and should be number';
+          }
+        },
+        decoration: InputDecoration(labelText: 'Product Price'),
+        keyboardType: TextInputType.number,
+        onSaved: (String value){
+          _formData['price'] = double.parse(value);        
         }
-      },
-      decoration: InputDecoration(labelText: 'Product Price'),
-      keyboardType: TextInputType.number,
-      onSaved: (String value){
-        _formData['price'] = double.parse(value);        
-      }
-      );
+      ));
   }
 
   void _submitForm() {
