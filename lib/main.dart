@@ -28,6 +28,10 @@ class _MyAppState extends State<MyApp> {
       _products.add(product);
     });
   }
+  
+  void _updateProduct(int index, Map<String, dynamic> product) {
+    _products[index] = product;
+  }
 
   void _deleteProduct(int index) {
     setState(() {
@@ -41,7 +45,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         //'/': (BuildContext context) => AuthPage(), // Слеш зарезирвирован под home:
         '/products': (BuildContext context) => ProductsPage(_products),
-        '/admin': (BuildContext context) => ProductsAdminPage(_addProduct, _deleteProduct, _products ),
+        '/admin': (BuildContext context) => ProductsAdminPage(_addProduct, _updateProduct, _deleteProduct, _products ),
       },
       onGenerateRoute: (RouteSettings settings){
         final List<String> pathElements = settings.name.split('/');
