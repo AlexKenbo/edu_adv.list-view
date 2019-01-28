@@ -25,6 +25,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
 
   Widget _buildTitleField(){
     return TextFormField(
+      initialValue: widget.product == null ? '' : widget.product['title'],
       //autovalidate: true, 
       validator: (String value) {
         //if (value.trim().length <= 0){
@@ -41,6 +42,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
 
   Widget _buildDescriptionField() {
     return TextFormField(
+      initialValue: widget.product == null ? '' : widget.product['description'],
       validator: (String value) {
         //if (value.trim().length <= 0){
         if (value.isEmpty || value.length < 10){  
@@ -58,6 +60,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
 
   Widget _buildPriceField() {
     return TextFormField(
+      initialValue: widget.product == null ? '' : widget.product['price'].toString(),
       validator: (String value) {
         //if (value.trim().length <= 0){
         if (value.isEmpty || !RegExp(r'^(?:[1-9]\d*|0)?(?:\[.,]\d+)?$').hasMatch(value)){  
@@ -86,8 +89,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
     final double deviceWidth = MediaQuery.of(context).size.width;
     final double targetWidth = deviceWidth > 550.0 ? 500.0 : deviceWidth * 0.95;
     final double targetPadding = deviceWidth - targetWidth;
-
-    return GestureDetector(
+    final Widget pageContent = GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
       },
@@ -118,5 +120,12 @@ class _ProductEditPageState extends State<ProductEditPage> {
             )*/
           ],
     ))));
+
+    return widget.product == null
+      ? pageContent
+      : Scaffold(
+        appBar: AppBar(title: Text('Edit product'),),
+        body: pageContent,
+      );
   }
 }
