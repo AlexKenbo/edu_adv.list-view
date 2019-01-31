@@ -11,7 +11,10 @@ class ProductListPage extends StatelessWidget {
   Widget build(BuildContext context){
     return ListView.builder(
       itemBuilder: (BuildContext context, int index) {
-        return Column(children: <Widget>[
+        return Dismissible(
+          key: Key(products[index]['title']),
+          background: Container(color: Colors.red[200]),
+          child: Column(children: <Widget>[
             ListTile( 
             leading: CircleAvatar(
               backgroundImage: AssetImage(products[index]['image']), 
@@ -33,7 +36,7 @@ class ProductListPage extends StatelessWidget {
           ),
           Divider()
         ],
-        );
+        ));
       },
       itemCount: products.length,
     );
