@@ -12,7 +12,7 @@ class ProductPage extends StatelessWidget {
   ProductPage(this.productIndex);
 
   Widget _buildAddressPriceRow(double price) {
-    return Row(
+    return Row( 
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text('Krasnodarskii krai, Anapa',
