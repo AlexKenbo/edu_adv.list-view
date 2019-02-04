@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import '../widgets/products/products.dart';
 
-class ProductsPage extends StatelessWidget {
+import 'package:scoped_model/scoped_model.dart';
+import '../scoped-models/products.dart';
 
+class ProductsPage extends StatelessWidget {
   Widget _buildSideDrawer(BuildContext context) {
     return Drawer(
       child: Column(
         children: <Widget>[
           AppBar(
-            automaticallyImplyLeading: false, //выкл. автоматическое добавление др. элементов, - иконка бутерброд
+            automaticallyImplyLeading:
+                false, //выкл. автоматическое добавление др. элементов, - иконка бутерброд
             title: Text('Choose'),
           ),
           ListTile(
             leading: Icon(Icons.edit),
             title: Text('Manage products'),
-            onTap: ()=>Navigator.pushReplacementNamed(context, '/admin'),
+            onTap: () => Navigator.pushReplacementNamed(context, '/admin'),
           ),
         ],
       ),
@@ -22,21 +25,27 @@ class ProductsPage extends StatelessWidget {
   }
 
   @override
-    Widget build(BuildContext context) {
-      // TODO: implement build
-      return Scaffold(
-        drawer: _buildSideDrawer(context),
-        appBar: AppBar(
-          title: Text('Easy List'),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.favorite),
-              onPressed: (){},
-            )
-          ],
-        ),
-        body: Products(),
-      );
-    }
-
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Scaffold(
+      drawer: _buildSideDrawer(context),
+      appBar: AppBar(
+        title: Text('Easy List'),
+        actions: <Widget>[
+          ScopedModelDescendant<ProductsModel>(
+            builder: (BuildContext context, Widget child, ProductsModel model) {
+              return IconButton(
+                  icon: Icon(model.displayFavoritesOnly
+                      ? Icons.favorite
+                      : Icons.favorite_border),
+                  onPressed: () {
+                    model.toggleDisplayMode();
+                  });
+            },
+          ),
+        ],
+      ),
+      body: Products(),
+    );
+  }
 }
