@@ -51,7 +51,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
         focusNode: _descriptionFocusNode,
         child: TextFormField(
             focusNode: _descriptionFocusNode,
-            initialValue: product == null ? '' : product.title,
+            initialValue: product == null ? '' : product.description,
             validator: (String value) {
               //if (value.trim().length <= 0){
               if (value.isEmpty || value.length < 10) {
@@ -60,7 +60,6 @@ class _ProductEditPageState extends State<ProductEditPage> {
             },
             maxLines: 5,
             decoration: InputDecoration(labelText: 'Product Descreption'),
-            keyboardType: TextInputType.number,
             onSaved: (String value) {
               _formData['description'] = value;
             }));
@@ -100,7 +99,6 @@ class _ProductEditPageState extends State<ProductEditPage> {
           price: _formData['price']));
     } else {
       updateProduct(
-          selectedProductIndex,
           Product(
               title: _formData['title'],
               description: _formData['description'],
