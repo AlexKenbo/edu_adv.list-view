@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:scoped_model/scoped_model.dart';
+
+import '../scoped-models/main.dart';
+
 class AuthPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -30,7 +34,9 @@ class _AuthPageState extends State<AuthPage> {
   Widget _buildEmailField() {
     return TextFormField(
       validator: (String value) {
-        if (value.isEmpty || !RegExp(r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)').hasMatch(value)){  
+        if (value.isEmpty ||
+            !RegExp(r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)')
+                .hasMatch(value)) {
           return 'Email is required and should be email address';
         }
       },
@@ -41,7 +47,7 @@ class _AuthPageState extends State<AuthPage> {
       ),
       keyboardType: TextInputType.emailAddress,
       onSaved: (String value) {
-          _formData['email'] = value;
+        _formData['email'] = value;
       },
     );
   }
@@ -49,7 +55,7 @@ class _AuthPageState extends State<AuthPage> {
   Widget _buildPasswordField() {
     return TextFormField(
       validator: (String value) {
-        if (value.isEmpty || value.length < 4){  
+        if (value.isEmpty || value.length < 4) {
           return 'Password is required and should be +3 charsets long';
         }
       },
@@ -77,12 +83,12 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
-  void _onSubmitForm() {
+  void _onSubmitForm(Function login) {
     if (!_formKey.currentState.validate() || !_formData['acceptTerms']) {
       return;
     }
-    _formKey.currentState.save();    
-    print('${_formData['email']}:${_formData['password']}');
+    _formKey.currentState.save();
+    login(_formData['email'], _formData['password']);
     Navigator.pushReplacementNamed(context, '/products');
   }
 
@@ -105,25 +111,30 @@ class _AuthPageState extends State<AuthPage> {
                 child: Container(
                     width: targetWidth,
                     child: Form(
-                      key: _formKey,
-                      child: Column(
-                        children: <Widget>[
-                          _buildEmailField(),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          _buildPasswordField(),
-                          _buildAcceptTerms(),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          RaisedButton(
-                            textColor: Colors.white,
-                            child: Text('LOGIN'),
-                            onPressed: _onSubmitForm,
-                          ),
-                        ],
-        ))))),
+                        key: _formKey,
+                        child: Column(
+                          children: <Widget>[
+                            _buildEmailField(),
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            _buildPasswordField(),
+                            _buildAcceptTerms(),
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            ScopedModelDescendant<MainModel>(
+                              builder: (BuildContext context, Widget child,
+                                  MainModel model) {
+                                return RaisedButton(
+                                  textColor: Colors.white,
+                                  child: Text('LOGIN'),
+                                  onPressed: () => _onSubmitForm(model.login),
+                                );
+                              },
+                            ),
+                          ],
+                        ))))),
       ),
     );
   }
