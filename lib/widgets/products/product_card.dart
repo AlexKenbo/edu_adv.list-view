@@ -68,6 +68,7 @@ class ProductCard extends StatelessWidget {
           //SizedBox(height: 10.0),
           _buildTitlePriceRow(),
           AddressTag('Krasnodarskii krai, Anapa'),
+          Text(product.userEmail),
           _buildActionButtons(context),
         ],
       ),
