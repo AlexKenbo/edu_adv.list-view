@@ -4,7 +4,19 @@ import '../widgets/products/products.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../scoped-models/main.dart';
 
-class ProductsPage extends StatelessWidget {
+class ProductsPage extends StatefulWidget {
+  final MainModel model;
+
+  ProductsPage(this.model);
+  _ProductsPageState createState() => _ProductsPageState();
+}
+
+class _ProductsPageState extends State<ProductsPage> {
+  @required
+  void initState() {
+    widget.model.fetchProducts(); 
+    super.initState();
+  }
   Widget _buildSideDrawer(BuildContext context) {
     return Drawer(
       child: Column(
