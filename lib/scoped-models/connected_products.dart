@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:scoped_model/scoped_model.dart';
-import 'package:http/http.dart' as http; 
+import 'package:http/http.dart' as http;
 
 import '../models/product.dart';
 import '../models/user.dart';
@@ -11,14 +11,21 @@ mixin ConnectedProductsModel on Model {
   int _selProductIndex;
   User _authenticatedUser;
 
-  void addProduct(String title, String description, String image, double price) {
+  void addProduct(
+      String title, String description, String image, double price) {
     final Map<String, dynamic> productData = {
       'title': title,
       'description': description,
-      'image': 'https://cdn.cpnscdn.com/static.coupons.com/ext/kitchme/images/recipes/600x400/old-fashioned-chocolate-fudge-recipe_17271.jpg',
+      'image':
+          'https://cdn.cpnscdn.com/static.coupons.com/ext/kitchme/images/recipes/600x400/old-fashioned-chocolate-fudge-recipe_17271.jpg',
       'price': price,
+      'userEmail': _authenticatedUser.email,
+      'userId': _authenticatedUser.id
     };
-    http.post('https://flutter-products-fdf2b.firebaseio.com/products.json', body: json.encode(productData)).then((http.Response response){
+    http
+        .post('https://flutter-products-fdf2b.firebaseio.com/products.json',
+            body: json.encode(productData))
+        .then((http.Response response) {
       final Map<String, dynamic> responseData = json.decode(response.body);
       //print(responseData);
       final Product newProduct = Product(
@@ -32,7 +39,6 @@ mixin ConnectedProductsModel on Model {
       _products.add(newProduct);
       notifyListeners();
     });
-
   }
 }
 
@@ -68,14 +74,15 @@ mixin ProductsModel on ConnectedProductsModel {
   void updateProduct(
       String title, String descriptoin, String image, double price) {
     final Product updateProduct = Product(
-      title: title,
-      description: descriptoin,
-      image: image,
-      price: price,
-      userEmail: selectedProduct.userEmail,
-      userId: selectedProduct.userId);
-      _products[selectedProductIndex] = updateProduct;
-      notifyListeners();
+        id: selectedProduct.id,
+        title: title,
+        description: descriptoin,
+        image: image,
+        price: price,
+        userEmail: selectedProduct.userEmail,
+        userId: selectedProduct.userId);
+    _products[selectedProductIndex] = updateProduct;
+    notifyListeners();
   }
 
   void deleteProduct() {
@@ -84,16 +91,33 @@ mixin ProductsModel on ConnectedProductsModel {
   }
 
   void fetchProducts() {
-    http.get('https://flutter-products-fdf2b.firebaseio.com/products.json')
-      .then((http.Response response){
-        print(json.decode(response.body));
+    http
+        .get('https://flutter-products-fdf2b.firebaseio.com/products.json')
+        .then((http.Response response) {
+          final List<Product> fetchProductList = [];
+      final Map<String, dynamic> productListData = json.decode(response.body);
+      productListData.forEach((String productId, dynamic productData) {
+        final Product product = Product(
+          id: productId,
+          title: productData['title'],
+          description: productData['description'],
+          image: productData['image'],
+          price: productData['price'],
+          userEmail: productData['userEmail'],
+          userId: productData['userId'],
+        );
+        fetchProductList.add(product);
       });
+      _products = fetchProductList;
+      notifyListeners();
+    });
   }
 
   void toggleProductFavoriteStatus() {
     final bool isCurrentlyFavorite = selectedProduct.isFavorite;
     final bool newFavoriteStatus = !isCurrentlyFavorite;
     final Product updatedProduct = Product(
+        id: selectedProduct.id,
         title: selectedProduct.title,
         description: selectedProduct.description,
         image: selectedProduct.image,
