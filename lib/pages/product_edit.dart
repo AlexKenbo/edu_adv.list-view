@@ -70,8 +70,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
         focusNode: _priceFocusNode,
         child: TextFormField(
             focusNode: _priceFocusNode,
-            initialValue:
-                product == null ? '' : product.price.toString(),
+            initialValue: product == null ? '' : product.price.toString(),
             validator: (String value) {
               //if (value.trim().length <= 0){
               if (value.isEmpty ||
@@ -86,35 +85,44 @@ class _ProductEditPageState extends State<ProductEditPage> {
             }));
   }
 
-  void _submitForm(Function addProduct, Function updateProduct, Function setSelectedProduct, [int selectedProductIndex]) {
+  void _submitForm(
+      Function addProduct, Function updateProduct, Function setSelectedProduct,
+      [int selectedProductIndex]) {
     if (!_formKey.currentState.validate()) {
       return;
     }
     _formKey.currentState.save();
     if (selectedProductIndex == null) {
       addProduct(
-        _formData['title'],
+        _formData['title'], 
         _formData['description'],
-        _formData['image'],
-        _formData['price']);
+        _formData['image'], 
+        _formData['price']).then((_) => Navigator
+          .pushReplacementNamed(context, '/products')
+            .then((_) => setSelectedProduct(null)));
     } else {
       updateProduct(
-        _formData['title'],
+        _formData['title'], 
         _formData['description'],
-        _formData['image'],
+        _formData['image'], 
         _formData['price']);
     }
-    Navigator.pushReplacementNamed(context, '/products').then((_) => setSelectedProduct(null));
   }
 
   Widget _buildSubmitButton() {
     return ScopedModelDescendant<MainModel>(
         builder: (BuildContext context, Widget child, MainModel model) {
-      return RaisedButton(
-        textColor: Colors.white,
-        child: Text('Save'),
-        onPressed: () => _submitForm(model.addProduct, model.updateProduct, model.selectProduct, model.selectedProductIndex),
-      );
+      return model.isLoading
+          ? Center(child: CircularProgressIndicator())
+          : RaisedButton(
+              textColor: Colors.white,
+              child: Text('Save'),
+              onPressed: () => _submitForm(
+                  model.addProduct,
+                  model.updateProduct,
+                  model.selectProduct,
+                  model.selectedProductIndex),
+            );
     });
   }
 
@@ -147,9 +155,10 @@ class _ProductEditPageState extends State<ProductEditPage> {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
-      builder: (BuildContext context, Widget child, MainModel model) {
-        final Widget pageContent = _buildPageContent(context, model.selectedProduct);
-        return model.selectedProductIndex == null
+        builder: (BuildContext context, Widget child, MainModel model) {
+      final Widget pageContent =
+          _buildPageContent(context, model.selectedProduct);
+      return model.selectedProductIndex == null
           ? pageContent
           : Scaffold(
               appBar: AppBar(
