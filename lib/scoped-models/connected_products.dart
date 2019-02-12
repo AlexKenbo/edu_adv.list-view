@@ -78,18 +78,34 @@ mixin ProductsModel on ConnectedProductsModel {
     return _showFavorites;
   }
 
-  void updateProduct(
-      String title, String descriptoin, String image, double price) {
-    final Product updateProduct = Product(
-        id: selectedProduct.id,
-        title: title,
-        description: descriptoin,
-        image: image,
-        price: price,
-        userEmail: selectedProduct.userEmail,
-        userId: selectedProduct.userId);
-    _products[selectedProductIndex] = updateProduct;
-    notifyListeners();
+  Future<Null> updateProduct(
+    String title, String description, String image, double price) {
+      _isLoading = true;
+      notifyListeners();
+      final Map<String, dynamic> updateData = {
+        'title': title,
+        'description': description,
+        'image': 'https://cdn.cpnscdn.com/static.coupons.com/ext/kitchme/images/recipes/600x400/old-fashioned-chocolate-fudge-recipe_17271.jpg',
+        'price': price,
+        'userEmail': selectedProduct.userEmail,
+        'userId': selectedProduct.userId
+      };
+      return http.put('https://flutter-products-fdf2b.firebaseio.com/products/${selectedProduct.id}.json', body: json.encode(updateData))
+      .then((http.Response response){
+        _isLoading = false;
+        final Product updateProduct = Product(
+          id: selectedProduct.id,
+          title: title,
+          description: description,
+          image: 'https://cdn.cpnscdn.com/static.coupons.com/ext/kitchme/images/recipes/600x400/old-fashioned-chocolate-fudge-recipe_17271.jpg',
+          price: price,
+          userEmail: selectedProduct.userEmail,
+          userId: selectedProduct.userId
+        );
+        _products[selectedProductIndex] = updateProduct;
+        notifyListeners();
+      });
+
   }
 
   void deleteProduct() {

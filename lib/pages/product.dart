@@ -53,7 +53,7 @@ class ProductPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment
                       .center, // выравнивание по горизонтали не сработало, так как ширина столбца = ширине элемента
                   children: <Widget>[
-                    Image.asset(product.image),
+                    Image.network(product.image),
                     TitleDefault(product.title),
                     _buildAddressPriceRow(product.price),
                     Container(
