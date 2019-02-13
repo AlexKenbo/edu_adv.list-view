@@ -13,11 +13,10 @@ mixin ConnectedProductsModel on Model {
   User _authenticatedUser;
   bool _isLoading = false;
 
-
   Future<Null> addProduct(
       String title, String description, String image, double price) {
     _isLoading = true;
-    notifyListeners();    
+    notifyListeners();
     final Map<String, dynamic> productData = {
       'title': title,
       'description': description,
@@ -30,22 +29,21 @@ mixin ConnectedProductsModel on Model {
     return http
         .post('https://flutter-products-fdf2b.firebaseio.com/products.json',
             body: json.encode(productData))
-        .then((http.Response response) {  
-          final Map<String, dynamic> responseData = json.decode(response.body);
+        .then((http.Response response) {
+      final Map<String, dynamic> responseData = json.decode(response.body);
       //print(responseData);
-          final Product newProduct = Product(
-              id: responseData['name'],
-              title: title,
-              description: description,
-              image: image,
-              price: price,
-              userEmail: _authenticatedUser.email,
-              userId: _authenticatedUser.id);
-          _products.add(newProduct);
-          _isLoading = false;
-          notifyListeners();
-        }
-    );
+      final Product newProduct = Product(
+          id: responseData['name'],
+          title: title,
+          description: description,
+          image: image,
+          price: price,
+          userEmail: _authenticatedUser.email,
+          userId: _authenticatedUser.id);
+      _products.add(newProduct);
+      _isLoading = false;
+      notifyListeners();
+    });
   }
 }
 
@@ -79,51 +77,64 @@ mixin ProductsModel on ConnectedProductsModel {
   }
 
   Future<Null> updateProduct(
-    String title, String description, String image, double price) {
-      _isLoading = true;
-      notifyListeners();
-      final Map<String, dynamic> updateData = {
-        'title': title,
-        'description': description,
-        'image': 'https://cdn.cpnscdn.com/static.coupons.com/ext/kitchme/images/recipes/600x400/old-fashioned-chocolate-fudge-recipe_17271.jpg',
-        'price': price,
-        'userEmail': selectedProduct.userEmail,
-        'userId': selectedProduct.userId
-      };
-      return http.put('https://flutter-products-fdf2b.firebaseio.com/products/${selectedProduct.id}.json', body: json.encode(updateData))
-      .then((http.Response response){
-        _isLoading = false;
-        final Product updateProduct = Product(
+      String title, String description, String image, double price) {
+    _isLoading = true;
+    notifyListeners();
+    final Map<String, dynamic> updateData = {
+      'title': title,
+      'description': description,
+      'image':
+          'https://cdn.cpnscdn.com/static.coupons.com/ext/kitchme/images/recipes/600x400/old-fashioned-chocolate-fudge-recipe_17271.jpg',
+      'price': price,
+      'userEmail': selectedProduct.userEmail,
+      'userId': selectedProduct.userId
+    };
+    return http
+        .put(
+            'https://flutter-products-fdf2b.firebaseio.com/products/${selectedProduct.id}.json',
+            body: json.encode(updateData))
+        .then((http.Response response) {
+      _isLoading = false;
+      final Product updateProduct = Product(
           id: selectedProduct.id,
           title: title,
           description: description,
-          image: 'https://cdn.cpnscdn.com/static.coupons.com/ext/kitchme/images/recipes/600x400/old-fashioned-chocolate-fudge-recipe_17271.jpg',
+          image:
+              'https://cdn.cpnscdn.com/static.coupons.com/ext/kitchme/images/recipes/600x400/old-fashioned-chocolate-fudge-recipe_17271.jpg',
           price: price,
           userEmail: selectedProduct.userEmail,
-          userId: selectedProduct.userId
-        );
-        _products[selectedProductIndex] = updateProduct;
-        notifyListeners();
-      });
-
+          userId: selectedProduct.userId);
+      _products[selectedProductIndex] = updateProduct;
+      notifyListeners();
+    });
   }
 
   void deleteProduct() {
+    _isLoading = true;
+    final deleteProductId = selectedProduct.id;
     _products.removeAt(selectedProductIndex);
+    _selProductIndex = null;
     notifyListeners();
+    http
+        .delete(
+            'https://flutter-products-fdf2b.firebaseio.com/products/${deleteProductId}.json')
+        .then((http.Response response) {
+          _isLoading = false;
+          notifyListeners();
+    });
   }
 
   void fetchProducts() {
     _isLoading = true;
-    notifyListeners(); 
+    notifyListeners();
     http
         .get('https://flutter-products-fdf2b.firebaseio.com/products.json')
         .then((http.Response response) {
-          final List<Product> fetchProductList = [];
+      final List<Product> fetchProductList = [];
       final Map<String, dynamic> productListData = json.decode(response.body);
       //print(productListData);
-      if (productListData == null){
-        _isLoading = false; 
+      if (productListData == null) {
+        _isLoading = false;
         notifyListeners();
         return;
       }
@@ -140,7 +151,7 @@ mixin ProductsModel on ConnectedProductsModel {
         fetchProductList.add(product);
       });
       _products = fetchProductList;
-      _isLoading = false; 
+      _isLoading = false;
       notifyListeners();
     });
   }
