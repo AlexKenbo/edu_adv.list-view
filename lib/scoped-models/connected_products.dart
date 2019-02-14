@@ -9,7 +9,7 @@ import '../models/user.dart';
 
 mixin ConnectedProductsModel on Model {
   List<Product> _products = [];
-  int _selProductIndex;
+  String _selProductId;
   User _authenticatedUser;
   bool _isLoading = false;
 
@@ -61,15 +61,23 @@ mixin ProductsModel on ConnectedProductsModel {
     return List.from(_products);
   }
 
-  int get selectedProductIndex {
-    return _selProductIndex;
+  int get selectedProductIndex {    
+    return _products.indexWhere((Product product){
+        return product.id == _selProductId;
+      });
+  }
+
+  String get selectedProductId {
+    return _selProductId;
   }
 
   Product get selectedProduct {
-    if (selectedProductIndex == null) {
+    if (selectedProductId == null) {
       return null;
     }
-    return _products[selectedProductIndex];
+    return _products.firstWhere((Product product){
+      return product.id == _selProductId;
+    });
   }
 
   bool get displayFavoritesOnly {
@@ -113,7 +121,7 @@ mixin ProductsModel on ConnectedProductsModel {
     _isLoading = true;
     final deleteProductId = selectedProduct.id;
     _products.removeAt(selectedProductIndex);
-    _selProductIndex = null;
+    _selProductId = null;
     notifyListeners();
     http
         .delete(
@@ -167,14 +175,14 @@ mixin ProductsModel on ConnectedProductsModel {
         price: selectedProduct.price,
         isFavorite: newFavoriteStatus,
         userEmail: selectedProduct.userEmail,
-        userId: selectedProduct.userId);
+        userId: selectedProduct.userId);  
     _products[selectedProductIndex] = updatedProduct;
     notifyListeners();
   }
 
-  void selectProduct(index) {
-    _selProductIndex = index;
-    if (index != null) {
+  void selectProduct(String productId) {
+    _selProductId = productId;
+    if (productId != null) {
       notifyListeners();
     }
   }
