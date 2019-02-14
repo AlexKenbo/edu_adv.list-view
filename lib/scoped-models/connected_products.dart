@@ -49,6 +49,10 @@ mixin ConnectedProductsModel on Model {
       _isLoading = false;
       notifyListeners();
       return true;
+    }).catchError((error){
+      _isLoading = false;
+      notifyListeners();
+      return false;
     });
   }
 }
@@ -90,7 +94,7 @@ mixin ProductsModel on ConnectedProductsModel {
     return _showFavorites;
   }
 
-  Future<Null> updateProduct(
+  Future<bool> updateProduct(
       String title, String description, String image, double price) {
     _isLoading = true;
     notifyListeners();
@@ -120,21 +124,31 @@ mixin ProductsModel on ConnectedProductsModel {
           userId: selectedProduct.userId);
       _products[selectedProductIndex] = updateProduct;
       notifyListeners();
+      return true;
+    }).catchError((error){
+      _isLoading = false;
+      notifyListeners();
+      return false;
     });
   }
 
-  void deleteProduct() {
+  Future<bool> deleteProduct() {
     _isLoading = true;
     final deleteProductId = selectedProduct.id;
     _products.removeAt(selectedProductIndex);
     _selProductId = null;
     notifyListeners();
-    http
+    return http
         .delete(
             'https://flutter-products-fdf2b.firebaseio.com/products/${deleteProductId}.json')
         .then((http.Response response) {
           _isLoading = false;
           notifyListeners();
+          return true;
+    }).catchError((error){
+      _isLoading = false;
+      notifyListeners();
+      return false;
     });
   }
 
@@ -143,7 +157,7 @@ mixin ProductsModel on ConnectedProductsModel {
     notifyListeners();
     return http
         .get('https://flutter-products-fdf2b.firebaseio.com/products.json')
-        .then((http.Response response) {
+        .then<Null>((http.Response response) {
       final List<Product> fetchProductList = [];
       final Map<String, dynamic> productListData = json.decode(response.body);
       //print(productListData);
@@ -168,6 +182,10 @@ mixin ProductsModel on ConnectedProductsModel {
       _isLoading = false;
       notifyListeners();
       _selProductId = null;
+    }).catchError((error){
+      _isLoading = false;
+      notifyListeners();
+      return;
     });
   }
 
