@@ -12,8 +12,6 @@ mixin ConnectedProductsModel on Model {
   String _selProductId;
   User _authenticatedUser;
   bool _isLoading = false;
-
-
 }
 
 mixin ProductsModel on ConnectedProductsModel {
@@ -30,10 +28,10 @@ mixin ProductsModel on ConnectedProductsModel {
     return List.from(_products);
   }
 
-  int get selectedProductIndex {    
-    return _products.indexWhere((Product product){
-        return product.id == _selProductId;
-      });
+  int get selectedProductIndex {
+    return _products.indexWhere((Product product) {
+      return product.id == _selProductId;
+    });
   }
 
   String get selectedProductId {
@@ -44,7 +42,7 @@ mixin ProductsModel on ConnectedProductsModel {
     if (selectedProductId == null) {
       return null;
     }
-    return _products.firstWhere((Product product){
+    return _products.firstWhere((Product product) {
       return product.id == _selProductId;
     });
   }
@@ -52,7 +50,7 @@ mixin ProductsModel on ConnectedProductsModel {
   bool get displayFavoritesOnly {
     return _showFavorites;
   }
-  
+
   Future<bool> addProduct(
       String title, String description, String image, double price) async {
     _isLoading = true;
@@ -67,15 +65,15 @@ mixin ProductsModel on ConnectedProductsModel {
       'userId': _authenticatedUser.id
     };
     try {
-      final http.Response response = await http
-        .post('https://flutter-products-fdf2b.firebaseio.com/products.json',
-            body: json.encode(productData));
-        
-          if (response.statusCode != 200 && response.statusCode != 201) {
-            _isLoading = false;
-            notifyListeners();
-            return false;
-          }
+      final http.Response response = await http.post(
+          'https://flutter-products-fdf2b.firebaseio.com/products.json',
+          body: json.encode(productData));
+
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
       final Map<String, dynamic> responseData = json.decode(response.body);
       //print(responseData);
       final Product newProduct = Product(
@@ -89,13 +87,13 @@ mixin ProductsModel on ConnectedProductsModel {
       _products.add(newProduct);
       _isLoading = false;
       notifyListeners();
-      return true;      
+      return true;
     } catch (error) {
-        _isLoading = false;
-        notifyListeners();
-        return false;
+      _isLoading = false;
+      notifyListeners();
+      return false;
     }
-    
+
 //    .catchError((error){
 //      _isLoading = false;
 //      notifyListeners();
@@ -134,7 +132,7 @@ mixin ProductsModel on ConnectedProductsModel {
       _products[selectedProductIndex] = updateProduct;
       notifyListeners();
       return true;
-    }).catchError((error){
+    }).catchError((error) {
       _isLoading = false;
       notifyListeners();
       return false;
@@ -151,10 +149,10 @@ mixin ProductsModel on ConnectedProductsModel {
         .delete(
             'https://flutter-products-fdf2b.firebaseio.com/products/${deleteProductId}.json')
         .then((http.Response response) {
-          _isLoading = false;
-          notifyListeners();
-          return true;
-    }).catchError((error){
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    }).catchError((error) {
       _isLoading = false;
       notifyListeners();
       return false;
@@ -191,7 +189,7 @@ mixin ProductsModel on ConnectedProductsModel {
       _isLoading = false;
       notifyListeners();
       _selProductId = null;
-    }).catchError((error){
+    }).catchError((error) {
       _isLoading = false;
       notifyListeners();
       return;
@@ -209,7 +207,7 @@ mixin ProductsModel on ConnectedProductsModel {
         price: selectedProduct.price,
         isFavorite: newFavoriteStatus,
         userEmail: selectedProduct.userEmail,
-        userId: selectedProduct.userId);  
+        userId: selectedProduct.userId);
     _products[selectedProductIndex] = updatedProduct;
     notifyListeners();
   }
@@ -231,6 +229,22 @@ mixin UserModel on ConnectedProductsModel {
   void login(String email, String password) {
     _authenticatedUser =
         User(id: 'efeewrerr', email: email, password: password);
+  }
+
+  Future<Map<String, dynamic>> signup(String email, String password) async {
+      final Map<String, dynamic> authData = {
+        'email': email,
+        'password': password,
+        'returnSecureToken': true,
+      };
+      //print(authData);
+      final http.Response response = await http.post(
+        'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyDUVf4d0Gf_rLlvNPdGSQvFTjMozT8HZJw',
+        body: json.encode(authData),
+        headers: {'Content-Type': 'application/json'},
+      );
+      print(json.decode(response.body));
+      return {'success': true, 'message': 'Authentification succeeded!'};
   }
 }
 

@@ -89,9 +89,6 @@ class _AuthPageState extends State<AuthPage> {
         fillColor: Colors.white,
       ),
       obscureText: true,
-      onSaved: (String value) {
-        _formData['email'] = value;
-      },
     );
   }
 
@@ -107,13 +104,21 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
-  void _onSubmitForm(Function login) {
+  void _onSubmitForm(Function login, Function signup) async {
     if (!_formKey.currentState.validate() || !_formData['acceptTerms']) {
       return;
     }
     _formKey.currentState.save();
-    login(_formData['email'], _formData['password']);
-    Navigator.pushReplacementNamed(context, '/products');
+    if(_authMode == AuthMode.Login){
+      login(_formData['email'], _formData['password']);
+    }else{
+      Map<String, dynamic> successInformation = await signup(_formData['email'], _formData['password']);
+
+      if(successInformation['success']){    
+        Navigator.pushReplacementNamed(context, '/products');
+      }
+    } 
+    
   }
 
   @override
@@ -173,7 +178,7 @@ class _AuthPageState extends State<AuthPage> {
                                 return RaisedButton(
                                   textColor: Colors.white,
                                   child: Text('LOGIN'),
-                                  onPressed: () => _onSubmitForm(model.login),
+                                  onPressed: () => _onSubmitForm(model.login, model.signup),
                                 );
                               },
                             ),
