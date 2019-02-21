@@ -109,16 +109,33 @@ class _AuthPageState extends State<AuthPage> {
       return;
     }
     _formKey.currentState.save();
-    if(_authMode == AuthMode.Login){
+    if (_authMode == AuthMode.Login) {
       login(_formData['email'], _formData['password']);
-    }else{
-      Map<String, dynamic> successInformation = await signup(_formData['email'], _formData['password']);
+    } else {
+      Map<String, dynamic> successInformation =
+          await signup(_formData['email'], _formData['password']);
 
-      if(successInformation['success']){    
+      if (successInformation['success']) {
         Navigator.pushReplacementNamed(context, '/products');
+      } else {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('An Error Occurred!'),
+                content: Text(successInformation['message']),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('Okay'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  )
+                ],
+              );
+            });
       }
-    } 
-    
+    }
   }
 
   @override
@@ -178,7 +195,8 @@ class _AuthPageState extends State<AuthPage> {
                                 return RaisedButton(
                                   textColor: Colors.white,
                                   child: Text('LOGIN'),
-                                  onPressed: () => _onSubmitForm(model.login, model.signup),
+                                  onPressed: () =>
+                                      _onSubmitForm(model.login, model.signup),
                                 );
                               },
                             ),

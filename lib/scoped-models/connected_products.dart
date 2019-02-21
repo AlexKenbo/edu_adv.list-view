@@ -243,8 +243,16 @@ mixin UserModel on ConnectedProductsModel {
         body: json.encode(authData),
         headers: {'Content-Type': 'application/json'},
       );
-      print(json.decode(response.body));
-      return {'success': true, 'message': 'Authentification succeeded!'};
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      bool hasError = true;
+      String message = 'Something went wrong.';
+      if (responseData.containsKey('idToken')){
+        hasError = false;
+        message = 'Authentification succeeded!';
+      } else if (responseData['error']['message'] == 'EMAIL_EXISTS'){
+        message = 'This email already exists.';
+      }
+      return {'success': !hasError, 'message': message};
   }
 }
 
