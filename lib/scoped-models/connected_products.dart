@@ -67,7 +67,7 @@ mixin ProductsModel on ConnectedProductsModel {
     };
     try {
       final http.Response response = await http.post(
-          'https://flutter-products-fdf2b.firebaseio.com/products.json',
+          'https://flutter-products-fdf2b.firebaseio.com/products.json?auth=${_authenticatedUser.token}',
           body: json.encode(productData));
 
       if (response.statusCode != 200 && response.statusCode != 201) {
@@ -117,7 +117,7 @@ mixin ProductsModel on ConnectedProductsModel {
     };
     return http
         .put(
-            'https://flutter-products-fdf2b.firebaseio.com/products/${selectedProduct.id}.json',
+            'https://flutter-products-fdf2b.firebaseio.com/products/${selectedProduct.id}.json?auth=${_authenticatedUser.token}',
             body: json.encode(updateData))
         .then((http.Response response) {
       _isLoading = false;
@@ -148,7 +148,7 @@ mixin ProductsModel on ConnectedProductsModel {
     notifyListeners();
     return http
         .delete(
-            'https://flutter-products-fdf2b.firebaseio.com/products/${deleteProductId}.json')
+            'https://flutter-products-fdf2b.firebaseio.com/products/${deleteProductId}.json?auth=${_authenticatedUser.token}')
         .then((http.Response response) {
       _isLoading = false;
       notifyListeners();
@@ -164,7 +164,7 @@ mixin ProductsModel on ConnectedProductsModel {
     _isLoading = true;
     notifyListeners();
     return http
-        .get('https://flutter-products-fdf2b.firebaseio.com/products.json')
+        .get('https://flutter-products-fdf2b.firebaseio.com/products.json?auth=${_authenticatedUser.token}')
         .then<Null>((http.Response response) {
       final List<Product> fetchProductList = [];
       final Map<String, dynamic> productListData = json.decode(response.body);
@@ -227,21 +227,21 @@ mixin ProductsModel on ConnectedProductsModel {
 }
 
 mixin UserModel on ConnectedProductsModel {
-  Future<Map<String, dynamic>> authenticate(String email, String password, [AuthMode mode = AuthMode.Login]) async {
+  Future<Map<String, dynamic>> authenticate(String email, String password,
+      [AuthMode mode = AuthMode.Login]) async {
     _isLoading = true;
     notifyListeners();
     final Map<String, dynamic> authData = {
-        'email': email,
-        'password': password,
-        'returnSecureToken': true,
+      'email': email,
+      'password': password,
+      'returnSecureToken': true,
     };
     http.Response response;
-    if (mode ==AuthMode.Login) {
+    if (mode == AuthMode.Login) {
       response = await http.post(
-      'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyDUVf4d0Gf_rLlvNPdGSQvFTjMozT8HZJw', 
-      body: json.encode(authData),
-      headers: {'Content-Type': 'application/json'}
-      );
+          'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyDUVf4d0Gf_rLlvNPdGSQvFTjMozT8HZJw',
+          body: json.encode(authData),
+          headers: {'Content-Type': 'application/json'});
     } else {
       response = await http.post(
         'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyDUVf4d0Gf_rLlvNPdGSQvFTjMozT8HZJw',
@@ -254,14 +254,18 @@ mixin UserModel on ConnectedProductsModel {
     bool hasError = true;
     String message = 'Something went wrong.';
     print(responseData);
-    if (responseData.containsKey('idToken')){
+    if (responseData.containsKey('idToken')) {
       hasError = false;
       message = 'Authentification succeeded!';
-    } else if (responseData['error']['message'] == 'EMAIL_EXISTS'){
-        message = 'This email already exists.';
-    } else if (responseData['error']['message'] == 'EMAIL_NOT_FOUND'){
+      _authenticatedUser = User(
+          id: responseData['localId'],
+          email: email,
+          token: responseData['idToken']);
+    } else if (responseData['error']['message'] == 'EMAIL_EXISTS') {
+      message = 'This email already exists.';
+    } else if (responseData['error']['message'] == 'EMAIL_NOT_FOUND') {
       message = 'This email was not found.';
-    } else if (responseData['error']['message'] == 'INVALID_PASSWORD'){
+    } else if (responseData['error']['message'] == 'INVALID_PASSWORD') {
       message = 'The password is invalid.';
     }
     _isLoading = false;
