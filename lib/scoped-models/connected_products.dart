@@ -166,7 +166,8 @@ mixin ProductsModel on ConnectedProductsModel {
     _isLoading = true;
     notifyListeners();
     return http
-        .get('https://flutter-products-fdf2b.firebaseio.com/products.json?auth=${_authenticatedUser.token}')
+        .get(
+            'https://flutter-products-fdf2b.firebaseio.com/products.json?auth=${_authenticatedUser.token}')
         .then<Null>((http.Response response) {
       final List<Product> fetchProductList = [];
       final Map<String, dynamic> productListData = json.decode(response.body);
@@ -199,20 +200,44 @@ mixin ProductsModel on ConnectedProductsModel {
     });
   }
 
-  void toggleProductFavoriteStatus() {
+  void toggleProductFavoriteStatus() async {
     final bool isCurrentlyFavorite = selectedProduct.isFavorite;
     final bool newFavoriteStatus = !isCurrentlyFavorite;
+
     final Product updatedProduct = Product(
+      id: selectedProduct.id,
+      title: selectedProduct.title,
+      description: selectedProduct.description,
+      image: selectedProduct.image,
+      price: selectedProduct.price,
+      isFavorite: newFavoriteStatus,
+      userEmail: selectedProduct.userEmail,
+      userId: selectedProduct.userId);
+    _products[selectedProductIndex] = updatedProduct;
+    notifyListeners();
+    http.Response response;
+    if (newFavoriteStatus) {
+      response = await http.put(
+        'https://flutter-products-fdf2b.firebaseio.com/products/${selectedProduct.id}/wishlistUsers/${_authenticatedUser.id}.json?auth=${_authenticatedUser.token}',
+          body: json.encode(true));  
+    } else {
+      response = await http.delete(
+        'https://flutter-products-fdf2b.firebaseio.com/products/${selectedProduct.id}/wishlistUsers/${_authenticatedUser.id}.json?auth=${_authenticatedUser.token}');
+    }
+    if (response.statusCode != 200 && response.statusCode != 201) {
+      final Product updatedProduct = Product(
         id: selectedProduct.id,
         title: selectedProduct.title,
         description: selectedProduct.description,
         image: selectedProduct.image,
         price: selectedProduct.price,
-        isFavorite: newFavoriteStatus,
+        isFavorite: !newFavoriteStatus,
         userEmail: selectedProduct.userEmail,
         userId: selectedProduct.userId);
-    _products[selectedProductIndex] = updatedProduct;
-    notifyListeners();
+      _products[selectedProductIndex] = updatedProduct;
+      notifyListeners();
+    }  
+
   }
 
   void selectProduct(String productId) {
@@ -271,14 +296,14 @@ mixin UserModel on ConnectedProductsModel {
       hasError = false;
       message = 'Authentification succeeded!';
       _authenticatedUser = User(
-        id: responseData['localId'],
-        email: email,
-        token: responseData['idToken']
-      );
+          id: responseData['localId'],
+          email: email,
+          token: responseData['idToken']);
       setAuthTimeout(int.parse(responseData['expiresIn']));
       _userSubject.add(true);
       final DateTime now = DateTime.now();
-      final DateTime expiryTime = now.add(Duration(seconds: int.parse(responseData['expiresIn'])));
+      final DateTime expiryTime =
+          now.add(Duration(seconds: int.parse(responseData['expiresIn'])));
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('token', responseData['idToken']);
       prefs.setString('userEmail', email);
@@ -303,7 +328,7 @@ mixin UserModel on ConnectedProductsModel {
     if (token != null) {
       final DateTime now = DateTime.now();
       final parsedExpiryTime = DateTime.parse(expiryTimeString);
-      if (parsedExpiryTime.isBefore(now)){
+      if (parsedExpiryTime.isBefore(now)) {
         _authenticatedUser = null;
         notifyListeners();
         return;
@@ -311,11 +336,7 @@ mixin UserModel on ConnectedProductsModel {
       final String userEmail = prefs.get('userEmail');
       final String userId = prefs.get('userId');
       final int tokenLifespan = parsedExpiryTime.difference(now).inSeconds;
-      _authenticatedUser = User(
-        id: userId,
-        email: userEmail,
-        token: token
-      );
+      _authenticatedUser = User(id: userId, email: userEmail, token: token);
       _userSubject.add(true);
       setAuthTimeout(tokenLifespan);
       notifyListeners();
@@ -331,7 +352,7 @@ mixin UserModel on ConnectedProductsModel {
     prefs.remove('token');
     prefs.remove('userEmail');
     prefs.remove('userId');
-  } 
+  }
 
   void setAuthTimeout(int time) {
     _authTimer = Timer(Duration(seconds: time), logout);
