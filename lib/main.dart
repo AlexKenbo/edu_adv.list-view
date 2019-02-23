@@ -28,55 +28,55 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final MainModel _model = MainModel();
 
-  void initState() { 
+  void initState() {
     _model.autoAuthenticate();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return ScopedModel<MainModel>(
         model: _model,
         child: MaterialApp(
-      routes: {
-        '/': (BuildContext context) => ScopedModelDescendant(builder: (BuildContext context, Widget child, MainModel model){
-          return model.user == null ? AuthPage() : ProductsPage(_model);
-        },), // Слеш зарезирвирован под home:
-        '/products': (BuildContext context) => ProductsPage(_model),
-        '/admin': (BuildContext context) => ProductsAdminPage(_model),
-      },
-      onGenerateRoute: (RouteSettings settings) {
-        final List<String> pathElements = settings.name.split('/');
-        if (pathElements[0] != '') {
-          return null;
-        }
+          routes: {
+            '/': (BuildContext context) => _model.user == null
+                ? AuthPage()
+                : ProductsPage(_model), // Слеш зарезирвирован под home:
+            '/products': (BuildContext context) => ProductsPage(_model),
+            '/admin': (BuildContext context) => ProductsAdminPage(_model),
+          },
+          onGenerateRoute: (RouteSettings settings) {
+            final List<String> pathElements = settings.name.split('/');
+            if (pathElements[0] != '') {
+              return null;
+            }
 
-        if (pathElements[1] == 'product') {
-          final String productId = pathElements[2];
-          final Product product = _model.allProducts.firstWhere((Product product){
-            return product.id == productId;
-          });
-          return MaterialPageRoute<bool>(
-              builder: (BuildContext context) =>
-                  ProductPage(product)
-                );
-        }
+            if (pathElements[1] == 'product') {
+              final String productId = pathElements[2];
+              final Product product =
+                  _model.allProducts.firstWhere((Product product) {
+                return product.id == productId;
+              });
+              return MaterialPageRoute<bool>(
+                  builder: (BuildContext context) => ProductPage(product));
+            }
 
-        return null;
-      },
-      onUnknownRoute: (RouteSettings settings) {
-        return MaterialPageRoute(
-          builder: (BuildContext context) => ProductsPage(_model),
-        );
-      },
-      //debugShowMaterialGrid: true,
-      theme: ThemeData(
-        brightness: Brightness.light,
-        primarySwatch: Colors.deepOrange,
-        accentColor: Colors.deepPurple,
-        fontFamily: 'Oswald',
-        buttonColor: Colors.red,
-      ),
-      //home: AuthPage(),
-    ));
+            return null;
+          },
+          onUnknownRoute: (RouteSettings settings) {
+            return MaterialPageRoute(
+              builder: (BuildContext context) => ProductsPage(_model),
+            );
+          },
+          //debugShowMaterialGrid: true,
+          theme: ThemeData(
+            brightness: Brightness.light,
+            primarySwatch: Colors.deepOrange,
+            accentColor: Colors.deepPurple,
+            fontFamily: 'Oswald',
+            buttonColor: Colors.red,
+          ),
+          //home: AuthPage(),
+        ));
   }
 }
