@@ -29,7 +29,7 @@ class _MyAppState extends State<MyApp> {
   final MainModel _model = MainModel();
 
   void initState() { 
-    _model;
+    _model.autoAuthenticate();
     super.initState();
   }
   @override
@@ -38,7 +38,9 @@ class _MyAppState extends State<MyApp> {
         model: _model,
         child: MaterialApp(
       routes: {
-        //'/': (BuildContext context) => AuthPage(), // Слеш зарезирвирован под home:
+        '/': (BuildContext context) => ScopedModelDescendant(builder: (BuildContext context, Widget child, MainModel model){
+          return model.user == null ? AuthPage() : ProductsPage(_model);
+        },), // Слеш зарезирвирован под home:
         '/products': (BuildContext context) => ProductsPage(_model),
         '/admin': (BuildContext context) => ProductsAdminPage(_model),
       },
@@ -74,7 +76,7 @@ class _MyAppState extends State<MyApp> {
         fontFamily: 'Oswald',
         buttonColor: Colors.red,
       ),
-      home: AuthPage(),
+      //home: AuthPage(),
     ));
   }
 }
