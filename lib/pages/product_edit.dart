@@ -79,7 +79,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
               }
             },
             decoration: InputDecoration(labelText: 'Product Price'),
-            keyboardType: TextInputType.number,
+            //keyboardType: TextInputType.number,
             onSaved: (String value) {
               _formData['price'] = double.parse(value);
             }));
@@ -157,6 +157,9 @@ class _ProductEditPageState extends State<ProductEditPage> {
                     _buildTitleField(product),
                     _buildDescriptionField(product),
                     _buildPriceField(product),
+                    SizedBox(
+                      height: 10.0,
+                    ),
                     SizedBox(
                       height: 10.0,
                     ),
