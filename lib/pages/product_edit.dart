@@ -7,6 +7,7 @@ import '../widgets/form_inputs/location.dart';
 
 import '../models/product.dart';
 import '../scoped-models/main.dart';
+import '../models/location_date.dart';
 
 class ProductEditPage extends StatefulWidget {
   @override
@@ -21,6 +22,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
     'descreption': null,
     'price': null,
     'image': 'assets/food.jpg',
+    'location': null
   };
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _titleFocusNode = FocusNode();
@@ -86,6 +88,10 @@ class _ProductEditPageState extends State<ProductEditPage> {
             }));
   }
 
+  void _setLocation(LocationData locData) {
+    _formData['location'] = locData;
+  }
+
   void _submitForm(
       Function addProduct, Function updateProduct, Function setSelectedProduct,
       [int selectedProductIndex]) {
@@ -94,25 +100,31 @@ class _ProductEditPageState extends State<ProductEditPage> {
     }
     _formKey.currentState.save();
     if (selectedProductIndex == -1) {
-      addProduct(_formData['title'], _formData['description'],
-              _formData['image'], _formData['price'])
+      addProduct(
+        _formData['title'], 
+        _formData['description'],
+        _formData['image'], 
+        _formData['price'],
+        _formData['location'])
           .then((bool success) {
         if (success) {
           Navigator.pushReplacementNamed(context, '/products')
               .then((_) => setSelectedProduct(null));
         } else {
-          showDialog(context: context, builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Something went wrong'),
-              content: Text('Please try again!'),
-              actions: <Widget>[
-                FlatButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text('Okay!'),
-                )
-              ],
-            );
-          });
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Something went wrong'),
+                  content: Text('Please try again!'),
+                  actions: <Widget>[
+                    FlatButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text('Okay!'),
+                    )
+                  ],
+                );
+              });
         }
       });
     } else {
@@ -161,7 +173,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
                     SizedBox(
                       height: 10.0,
                     ),
-                    LocationInput(),
+                    LocationInput(_setLocation),
                     SizedBox(
                       height: 10.0,
                     ),

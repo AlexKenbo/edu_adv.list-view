@@ -8,6 +8,10 @@ import '../helpers/ensure-visible.dart';
 import '../../models/location_date.dart';
 
 class LocationInput extends StatefulWidget {
+  final Function setLocation;
+
+  LocationInput(this.setLocation);
+
   _LocationInputState createState() => _LocationInputState();
 }
 
@@ -34,6 +38,7 @@ class _LocationInputState extends State<LocationInput> {
       setState(() {
         _staticMapUri = null;
       });
+      widget.setLocation(null);
       return;
     }
     final Uri uri = Uri.https('maps.googleapis.com', 'maps/api/geocode/json',
@@ -56,7 +61,7 @@ class _LocationInputState extends State<LocationInput> {
         width: 500,
         height: 300,
         maptype: StaticMapViewType.roadmap);
-
+    widget.setLocation(_locationData);
     setState(() {
       _addressInputController.text = _locationData.address;
       _staticMapUri = staticMapUri;
