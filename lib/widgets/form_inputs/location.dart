@@ -6,11 +6,13 @@ import 'package:http/http.dart' as http;
 
 import '../helpers/ensure-visible.dart';
 import '../../models/location_date.dart';
+import '../../models/product.dart';
 
 class LocationInput extends StatefulWidget {
   final Function setLocation;
+  final Product product;
 
-  LocationInput(this.setLocation);
+  LocationInput(this.setLocation, this.product);
 
   _LocationInputState createState() => _LocationInputState();
 }
@@ -24,6 +26,9 @@ class _LocationInputState extends State<LocationInput> {
   @override
   void initState() {
     _addressInputFocusNode.addListener(_updateLocation);
+    if (widget.product != null) {
+      getStaticMap(widget.product.location.address);
+    }
     super.initState();
   }
 
@@ -41,16 +46,21 @@ class _LocationInputState extends State<LocationInput> {
       widget.setLocation(null);
       return;
     }
-    final Uri uri = Uri.https('maps.googleapis.com', 'maps/api/geocode/json',
-        {'address': address, 'key': 'AIzaSyAkEeRQIh1pES9jiCbQ-w6ILwcsuRqkCZg'});
-    final http.Response response = await http.get(uri);
-    final decodeResponse = json.decode(response.body);
-    final formattedAddress = decodeResponse['results'][0]['formatted_address'];
-    final coords = decodeResponse['results'][0]['geometry']['location'];
-    _locationData = LocationData(
-        address: formattedAddress,
-        latitude: coords['lat'],
-        longitude: coords['lng']);
+
+    if (widget.product == null) {
+      final Uri uri = Uri.https('maps.googleapis.com', 'maps/api/geocode/json',
+          {'address': address, 'key': 'AIzaSyAkEeRQIh1pES9jiCbQ-w6ILwcsuRqkCZg'});
+      final http.Response response = await http.get(uri);
+      final decodeResponse = json.decode(response.body);
+      final formattedAddress = decodeResponse['results'][0]['formatted_address'];
+      final coords = decodeResponse['results'][0]['geometry']['location'];
+      _locationData = LocationData(
+          address: formattedAddress,
+          latitude: coords['lat'],
+          longitude: coords['lng']);
+    } else {
+      _locationData = widget.product.location;
+    }
 
     final StaticMapProvider staticMapViewProvider =
         StaticMapProvider('AIzaSyAkEeRQIh1pES9jiCbQ-w6ILwcsuRqkCZg');
