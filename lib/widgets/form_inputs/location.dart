@@ -27,7 +27,7 @@ class _LocationInputState extends State<LocationInput> {
   void initState() {
     _addressInputFocusNode.addListener(_updateLocation);
     if (widget.product != null) {
-      getStaticMap(widget.product.location.address);
+      getStaticMap(widget.product.location.address, false);
     }
     super.initState();
   }
@@ -38,7 +38,7 @@ class _LocationInputState extends State<LocationInput> {
     super.dispose();
   }
 
-  void getStaticMap(String address) async {
+  void getStaticMap(String address, [geocode = true]) async {
     if (address.isEmpty) {
       setState(() {
         _staticMapUri = null;
@@ -47,12 +47,16 @@ class _LocationInputState extends State<LocationInput> {
       return;
     }
 
-    if (widget.product == null) {
-      final Uri uri = Uri.https('maps.googleapis.com', 'maps/api/geocode/json',
-          {'address': address, 'key': 'AIzaSyAkEeRQIh1pES9jiCbQ-w6ILwcsuRqkCZg'});
+    if (geocode) {
+      final Uri uri = Uri.https(
+          'maps.googleapis.com', 'maps/api/geocode/json', {
+        'address': address,
+        'key': 'AIzaSyAkEeRQIh1pES9jiCbQ-w6ILwcsuRqkCZg'
+      });
       final http.Response response = await http.get(uri);
       final decodeResponse = json.decode(response.body);
-      final formattedAddress = decodeResponse['results'][0]['formatted_address'];
+      final formattedAddress =
+          decodeResponse['results'][0]['formatted_address'];
       final coords = decodeResponse['results'][0]['geometry']['location'];
       _locationData = LocationData(
           address: formattedAddress,
@@ -65,7 +69,8 @@ class _LocationInputState extends State<LocationInput> {
     final StaticMapProvider staticMapViewProvider =
         StaticMapProvider('AIzaSyAkEeRQIh1pES9jiCbQ-w6ILwcsuRqkCZg');
     final Uri staticMapUri = staticMapViewProvider.getStaticUriWithMarkers([
-      Marker('position', 'Позиция', _locationData.latitude, _locationData.longitude),
+      Marker('position', 'Позиция', _locationData.latitude,
+          _locationData.longitude),
     ],
         center: Location(_locationData.latitude, _locationData.longitude),
         width: 500,
@@ -104,7 +109,9 @@ class _LocationInputState extends State<LocationInput> {
         SizedBox(
           height: 10.0,
         ),
-        Image.network(_staticMapUri.toString())
+        _staticMapUri == null
+            ? Container()
+            : Image.network(_staticMapUri.toString())
       ],
     );
   }
