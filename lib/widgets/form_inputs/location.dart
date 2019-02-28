@@ -71,22 +71,25 @@ class _LocationInputState extends State<LocationInput> {
       _locationData =
           LocationData(address: address, latitude: lat, longitude: lng);
     }
+    if (mounted) {
+      final StaticMapProvider staticMapViewProvider =
+          StaticMapProvider('AIzaSyAkEeRQIh1pES9jiCbQ-w6ILwcsuRqkCZg');
+      final Uri staticMapUri = staticMapViewProvider.getStaticUriWithMarkers([
+        Marker('position', 'Позиция', _locationData.latitude,
+            _locationData.longitude),
+      ],
+          center: Location(_locationData.latitude, _locationData.longitude),
+          width: 500,
+          height: 300,
+          maptype: StaticMapViewType.roadmap);
+      widget.setLocation(_locationData);
 
-    final StaticMapProvider staticMapViewProvider =
-        StaticMapProvider('AIzaSyAkEeRQIh1pES9jiCbQ-w6ILwcsuRqkCZg');
-    final Uri staticMapUri = staticMapViewProvider.getStaticUriWithMarkers([
-      Marker('position', 'Позиция', _locationData.latitude,
-          _locationData.longitude),
-    ],
-        center: Location(_locationData.latitude, _locationData.longitude),
-        width: 500,
-        height: 300,
-        maptype: StaticMapViewType.roadmap);
-    widget.setLocation(_locationData);
-    setState(() {
-      _addressInputController.text = _locationData.address;
-      _staticMapUri = staticMapUri;
-    });
+      setState(() {
+        _addressInputController.text = _locationData.address;
+        _staticMapUri = staticMapUri;
+      });
+    }
+
   }
 
   Future<String> _getAddress(double lat, double lng) async {
