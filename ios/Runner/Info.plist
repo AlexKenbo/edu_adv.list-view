@@ -43,5 +43,11 @@
 	<false/>
 	<key>NSLocationWhenInUseUsageDescription</key>
     <string>Мы хотим получить ваше местоположение</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>Мы хотим использовать вашу фото галлерею</string>
+	<key>NSCameraUsageDescription</key>
+    <string>Мы хотим использовать вашу камеру</string>	
+	<key>NSMicrophoneUsageDescription</key>
+    <string>Мы хотим использовать ваш микрофон</string>
 </dict>
 </plist>
