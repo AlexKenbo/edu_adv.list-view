@@ -132,6 +132,7 @@ mixin ProductsModel on ConnectedProductsModel {
           title: title,
           description: description,
           image: uploadData['imageUrl'],
+          imagePath: uploadData['imagePath'],
           price: price,
           userEmail: _authenticatedUser.email,
           userId: _authenticatedUser.id,
@@ -160,8 +161,6 @@ mixin ProductsModel on ConnectedProductsModel {
     final Map<String, dynamic> updateData = {
       'title': title,
       'description': description,
-      'image':
-          'https://cdn.cpnscdn.com/static.coupons.com/ext/kitchme/images/recipes/600x400/old-fashioned-chocolate-fudge-recipe_17271.jpg',
       'price': price,
       'loc_lat': locData.latitude,
       'loc_lng': locData.longitude,
@@ -179,8 +178,7 @@ mixin ProductsModel on ConnectedProductsModel {
           id: selectedProduct.id,
           title: title,
           description: description,
-          image:
-              'https://cdn.cpnscdn.com/static.coupons.com/ext/kitchme/images/recipes/600x400/old-fashioned-chocolate-fudge-recipe_17271.jpg',
+          image: image,
           price: price,
           location: locData,
           userEmail: selectedProduct.userEmail,
@@ -235,7 +233,8 @@ mixin ProductsModel on ConnectedProductsModel {
             id: productId,
             title: productData['title'],
             description: productData['description'],
-            image: productData['image'],
+            image: productData['imageUrl'],
+            imagePath: productData['imagePath'],
             price: productData['price'],
             location: LocationData(
                 address: productData['loc_address'],
@@ -273,6 +272,7 @@ mixin ProductsModel on ConnectedProductsModel {
         title: selectedProduct.title,
         description: selectedProduct.description,
         image: selectedProduct.image,
+        imagePath: selectedProduct.imagePath,
         price: selectedProduct.price,
         location: selectedProduct.location,
         isFavorite: newFavoriteStatus,
@@ -295,6 +295,7 @@ mixin ProductsModel on ConnectedProductsModel {
           title: selectedProduct.title,
           description: selectedProduct.description,
           image: selectedProduct.image,
+          imagePath: selectedProduct.imagePath,
           price: selectedProduct.price,
           location: selectedProduct.location,
           isFavorite: !newFavoriteStatus,
