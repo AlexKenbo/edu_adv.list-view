@@ -58,7 +58,7 @@ mixin ProductsModel on ConnectedProductsModel {
     return _showFavorites;
   }
 
-  Future<Map<String, String>> uploadImage(File image,
+  Future<Map<String, dynamic>> uploadImage(File image,
       {String imagePath}) async {
     final mimeTypeData = lookupMimeType(image.path).split('/');
     final imageUploadRequest = http.MultipartRequest(

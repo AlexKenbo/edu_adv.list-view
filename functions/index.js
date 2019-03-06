@@ -19,9 +19,11 @@ const gcconfig = {
 
 };
 
+const gcs = require('@google-cloud/storage')(gcconfig);
+
 fbAdmin.initializeApp({ credential: fbAdmin.credential.cert(require('./authkey.json')) });
 
-const gcs = require('@google-cloud/storage')(gcconfig);
+
 
 exports.storeImage = functions.https.onRequest((req, res) => {
     return cors(req, res, () => {
@@ -30,7 +32,7 @@ exports.storeImage = functions.https.onRequest((req, res) => {
         }
 
         if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) {
-            return res.status(401).json({ error: 'Unauthorised.' })
+            return res.status(401).json({ error: 'Unauthorized.' })
         }
 
         let idToken;
@@ -40,7 +42,7 @@ exports.storeImage = functions.https.onRequest((req, res) => {
         let uploadData;
         let oldImagePath;
 
-        busboy.on('file', (fieldname, file, encoding, mimetype) => {
+        busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
             const filePath = path.join(os.tmpdir(), filename);
             uploadData = { filePath: filePath, type: mimetype, name: filename };
             file.pipe(fs.createWriteStream(filePath));
@@ -68,7 +70,7 @@ exports.storeImage = functions.https.onRequest((req, res) => {
                         metadata: {
                             metadata: {
                                 contentType: uploadData.type,
-                                firebaseStorageDownloadToken: id
+                                firebaseStorageDownloadTokens: id
                             }
                         }
                     });
