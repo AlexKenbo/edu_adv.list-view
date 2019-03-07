@@ -154,13 +154,15 @@ mixin ProductsModel on ConnectedProductsModel {
 //    });
   }
 
-  Future<bool> updateProduct(String title, String description, String image,
+  Future<bool> updateProduct(String title, String description, File image,
       double price, LocationData locData) {
     _isLoading = true;
     notifyListeners();
     final Map<String, dynamic> updateData = {
       'title': title,
       'description': description,
+      'imageUrl': ,
+      'imagePath': ,
       'price': price,
       'loc_lat': locData.latitude,
       'loc_lng': locData.longitude,
