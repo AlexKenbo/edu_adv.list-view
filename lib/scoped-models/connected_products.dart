@@ -154,15 +154,25 @@ mixin ProductsModel on ConnectedProductsModel {
 //    });
   }
 
-  Future<bool> updateProduct(String title, String description, File image,
-      double price, LocationData locData) {
+  Future<bool> updateProduct(String title, String description, File image, double price, LocationData locData) async {
     _isLoading = true;
     notifyListeners();
+    String imageUrl = selectedProduct.image;
+    String imagePath = selectedProduct.image;
+    if (image != null) {
+      final uploadData = await uploadImage(image);
+      if (uploadData == null) {
+        print('Upload failed');
+        return false;
+      }
+      imageUrl = uploadData['imageUrl'];
+      imagePath = uploadData['imagePath'];
+    }
     final Map<String, dynamic> updateData = {
       'title': title,
       'description': description,
-      'imageUrl': ,
-      'imagePath': ,
+      'imageUrl': imageUrl,
+      'imagePath': imagePath,
       'price': price,
       'loc_lat': locData.latitude,
       'loc_lng': locData.longitude,
@@ -170,29 +180,30 @@ mixin ProductsModel on ConnectedProductsModel {
       'userEmail': selectedProduct.userEmail,
       'userId': selectedProduct.userId
     };
-    return http
-        .put(
-            'https://flutter-products-fdf2b.firebaseio.com/products/${selectedProduct.id}.json?auth=${_authenticatedUser.token}',
-            body: json.encode(updateData))
-        .then((http.Response response) {
-      _isLoading = false;
-      final Product updateProduct = Product(
-          id: selectedProduct.id,
-          title: title,
-          description: description,
-          image: image,
-          price: price,
-          location: locData,
-          userEmail: selectedProduct.userEmail,
-          userId: selectedProduct.userId);
-      _products[selectedProductIndex] = updateProduct;
-      notifyListeners();
-      return true;
-    }).catchError((error) {
-      _isLoading = false;
-      notifyListeners();
-      return false;
-    });
+    try {
+      final http.Response response = await http.put(
+        'https://flutter-products-fdf2b.firebaseio.com/products/${selectedProduct.id}.json?auth=${_authenticatedUser.token}',
+              body: json.encode(updateData));
+
+        _isLoading = false;
+        final Product updateProduct = Product(
+            id: selectedProduct.id,
+            title: title,
+            description: description,
+            image: imageUrl,
+            imagePath: imagePath,
+            price: price,
+            location: locData,
+            userEmail: selectedProduct.userEmail,
+            userId: selectedProduct.userId);
+        _products[selectedProductIndex] = updateProduct;
+        notifyListeners();
+        return true;
+    } catch (error) {
+        _isLoading = false;
+        notifyListeners();
+        return false;
+    }
   }
 
   Future<bool> deleteProduct() {
