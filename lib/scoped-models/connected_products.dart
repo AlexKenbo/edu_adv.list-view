@@ -181,12 +181,13 @@ mixin ProductsModel on ConnectedProductsModel {
       'userId': selectedProduct.userId
     };
     try {
-      final http.Response response = await http.put(
+      await http.put(
         'https://flutter-products-fdf2b.firebaseio.com/products/${selectedProduct.id}.json?auth=${_authenticatedUser.token}',
-              body: json.encode(updateData));
+              body: json.encode(updateData)
+      );
 
-        _isLoading = false;
-        final Product updateProduct = Product(
+      _isLoading = false;
+      final Product updateProduct = Product(
             id: selectedProduct.id,
             title: title,
             description: description,
@@ -214,7 +215,7 @@ mixin ProductsModel on ConnectedProductsModel {
     notifyListeners();
     return http
         .delete(
-            'https://flutter-products-fdf2b.firebaseio.com/products/${deleteProductId}.json?auth=${_authenticatedUser.token}')
+            'https://flutter-products-fdf2b.firebaseio.com/products/$deleteProductId.json?auth=${_authenticatedUser.token}')
         .then((http.Response response) {
       _isLoading = false;
       notifyListeners();
