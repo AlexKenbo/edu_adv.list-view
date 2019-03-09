@@ -13,7 +13,7 @@ class Products extends StatelessWidget {
       productCards = ListView.builder(
         //Подгружает постепенно элементы списка
         //Хорош на big-списках
-        itemBuilder: (BuildContext context, int index) => ProductCard(products[index], index),
+        itemBuilder: (BuildContext context, int index) => ProductCard(products[index]),
         itemCount: products.length,
       );
     } else {
