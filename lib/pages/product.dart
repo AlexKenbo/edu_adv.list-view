@@ -70,37 +70,43 @@ class ProductPage extends StatelessWidget {
           return Future.value(false);
         },
         child: Scaffold(
-            appBar: AppBar(
-              title: Text(product.title),
-            ),
-            body: Container(
-                padding: EdgeInsets.all(10.0),
-                child: Column(
-                  //mainAxisAlignment: MainAxisAlignment.center, // выравнивание по вертикали. не используем тк с картинкой по центру не красиво
-                  crossAxisAlignment: CrossAxisAlignment
-                      .center, // выравнивание по горизонтали не сработало, так как ширина столбца = ширине элемента
-                  children: <Widget>[
-                    Hero(
-                      tag: product.id,
-                      child: FadeInImage(
-                        image: NetworkImage(product.image),
-                        height: 300.0,
-                        fit: BoxFit.cover,
-                        placeholder: AssetImage('assets/background.jpg'),
-                      )
-                    ),
-                    TitleDefault(product.title),
-                    _buildAddressPriceRow(
-                        product.location.address, product.price),
-                    Container(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          product.description,
-                          textAlign: TextAlign.left,
-                        )),
-                  ],
-          )
-        ),
+            //appBar: AppBar(
+            //  title: Text(product.title),
+            //),
+            body: CustomScrollView(slivers: <Widget>[
+              SliverAppBar(
+                expandedHeight: 256.0,
+                pinned: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  title: Text(product.title),
+                  background: Hero(
+                    tag: product.id,
+                    child: FadeInImage(
+                      image: NetworkImage(product.image),
+                      height: 300.0,
+                      fit: BoxFit.cover,
+                      placeholder: AssetImage('assets/background.jpg'),
+                    )
+                  ),
+                ),
+              ),
+              SliverList(delegate: SliverChildListDelegate([
+                Container(
+                  padding: EdgeInsets.all(10.0),
+                  alignment: Alignment.center,
+                  child:TitleDefault(product.title),
+                ),
+                _buildAddressPriceRow(
+                  product.location.address, product.price),
+                Container(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text(
+                    product.description,
+                    textAlign: TextAlign.left,
+                  )
+                ),
+              ]),)
+            ],),
         floatingActionButton: ProductFAB(product),
       )
     );
