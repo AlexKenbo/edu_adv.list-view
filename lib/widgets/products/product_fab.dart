@@ -65,7 +65,7 @@ class _ProductFABState extends State<ProductFAB> with TickerProviderStateMixin {
             child: ScaleTransition(
               scale: CurvedAnimation(
                 parent: _controller,
-                curve: Interval(0.0, 1.0, curve: Curves.easeOut),
+                curve: Interval(0.0, 0.5, curve: Curves.easeOut),
               ),
               child: FloatingActionButton(
                 backgroundColor: Theme.of(context).cardColor,
