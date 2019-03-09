@@ -317,6 +317,7 @@ mixin ProductsModel on ConnectedProductsModel {
       _products[selectedProductIndex] = updatedProduct;
       notifyListeners();
     }
+    _selProductId = null;
   }
 
   void selectProduct(String productId) {
