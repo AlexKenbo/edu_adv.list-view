@@ -80,11 +80,14 @@ class ProductPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment
                       .center, // выравнивание по горизонтали не сработало, так как ширина столбца = ширине элемента
                   children: <Widget>[
-                    FadeInImage(
-                      image: NetworkImage(product.image),
-                      height: 300.0,
-                      fit: BoxFit.cover,
-                      placeholder: AssetImage('assets/background.jpg'),
+                    Hero(
+                      tag: product.id,
+                      child: FadeInImage(
+                        image: NetworkImage(product.image),
+                        height: 300.0,
+                        fit: BoxFit.cover,
+                        placeholder: AssetImage('assets/background.jpg'),
+                      )
                     ),
                     TitleDefault(product.title),
                     _buildAddressPriceRow(
