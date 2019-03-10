@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:scoped_model/scoped_model.dart';
 
@@ -176,7 +177,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
     return ScopedModelDescendant<MainModel>(
         builder: (BuildContext context, Widget child, MainModel model) {
       return model.isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? Center(child: Theme.of(context).platform == TargetPlatform.iOS  ? CupertinoActivityIndicator() : CircularProgressIndicator())
           : RaisedButton(
               textColor: Colors.white,
               child: Text('Save'),
