@@ -13,6 +13,7 @@ import './scoped-models/main.dart';
 
 import './widgets/helpers/custom_route.dart';
 import './shared/global_config.dart';
+import './shared/adaptive_theme.dart';
 
 void main() {
   //debugPaintSizeEnabled = true;
@@ -90,13 +91,7 @@ class _MyAppState extends State<MyApp> {
             );
           },
           //debugShowMaterialGrid: true,
-          theme: ThemeData(
-            brightness: Brightness.light,
-            primarySwatch: Colors.deepOrange,
-            accentColor: Colors.deepPurple,
-            fontFamily: 'Oswald',
-            buttonColor: Colors.red,
-          ),
+          theme: getAdaptiveThemeData(context),
           //home: AuthPage(),
         ));
   }

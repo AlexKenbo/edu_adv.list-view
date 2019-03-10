@@ -19,6 +19,7 @@ class ProductsAdminPage extends StatelessWidget {
             automaticallyImplyLeading:
                 false, //выкл. автоматическое добавление др. элементов, - иконка бутерброд
             title: Text('Choose'),
+            elevation: Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 0.4,
           ),
           ListTile(
             leading: Icon(Icons.shop),
@@ -42,6 +43,7 @@ class ProductsAdminPage extends StatelessWidget {
           drawer: _buildSideDrawer(context),
           appBar: AppBar(
             title: Text('Manage product'),
+            elevation: Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 0.4,
             bottom: TabBar(
               tabs: <Widget>[
                 Tab(
