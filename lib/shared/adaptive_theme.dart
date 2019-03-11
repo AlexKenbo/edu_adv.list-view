@@ -10,10 +10,11 @@ final ThemeData _androidTheme = ThemeData(
 
 final ThemeData _iOSTheme = ThemeData(
   brightness: Brightness.light,
-  primarySwatch: Colors.grey[300],
+  primaryColor: Colors.grey[300],
   accentColor: Colors.blue,
   fontFamily: 'Oswald',
   buttonColor: Colors.blue,
+
 );
 
 ThemeData getAdaptiveThemeData(context) {
