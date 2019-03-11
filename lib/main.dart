@@ -46,6 +46,7 @@ class _MyAppState extends State<MyApp> {
       batteryLevel = 'Battery level is $result%.';
     } catch (error) {
       batteryLevel = 'Failed to get battery level.';
+      print(error);
     }
     print(batteryLevel);
   } 
@@ -57,6 +58,7 @@ class _MyAppState extends State<MyApp> {
         _isAuthenticated = isAuthenticated;
       });
     });
+    _getBatteryLevel();
     super.initState();
   }
 
