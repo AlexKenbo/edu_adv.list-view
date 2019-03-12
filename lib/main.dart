@@ -68,6 +68,7 @@ class _MyAppState extends State<MyApp> {
     return ScopedModel<MainModel>(
         model: _model,
         child: MaterialApp(
+          title: 'EasyList',
           routes: {
             '/': (BuildContext context) => !_isAuthenticated
                 ? AuthPage()
