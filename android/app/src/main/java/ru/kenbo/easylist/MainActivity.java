@@ -1,4 +1,4 @@
-package com.example.fluttercourse;
+package ru.kenbo.easylist;
 
 import android.os.Bundle;
 import android.content.ContextWrapper;
